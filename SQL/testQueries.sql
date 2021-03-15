@@ -1,4 +1,4 @@
--- Display Monday logs of exercises and corresponding weight and reps
+-- Display (all) Monday logs of exercises and corresponding weight and reps
 SELECT
     exercise_name AS 'Monday lifts',
     wgt AS 'weight',
@@ -15,7 +15,8 @@ WHERE DAYNAME(logs.created_at) = 'Monday';
 -- Display log of exercises and corresponding weight and reps for '2021-03-05'
 SELECT 
     exercise_name AS 'lifts on 2021-03-0',
-    wgt AS 'weight'
+    wgt AS 'weight',
+    reps
 FROM workouts
 INNER JOIN logs
     ON logs.id = workouts.logs_id

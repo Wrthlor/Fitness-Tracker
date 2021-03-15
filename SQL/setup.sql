@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS workouts (
     FOREIGN KEY (metrics_id) REFERENCES metrics(id)
 );
 
--- Log to associate user (in future) and workout per day
+-- Log to represent per day
+-- Includes workout per day and association per user (future implementation)
 CREATE TABLE IF NOT EXISTS logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     created_at TIMESTAMP DEFAULT NOW()
