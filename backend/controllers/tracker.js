@@ -20,11 +20,9 @@ trackerRouter.get('/exercises', async (req, res) => {
     connection.query(q, (error, result) => {
         if (error) throw error;
         let output = [];
-
         result.forEach(exercise => {
             output.push(exercise.exercise_name);
         })
-
         res.send(output);
     });
 })
@@ -38,14 +36,12 @@ trackerRouter.get('/logs', async (req, res) => {
     connection.query(sql, (error, result) => {
         if (error) throw error;
         let logData = [];
-
         result.forEach(log => {
             logData.push({
                 "id" : log.id,
                 "date": log.date
             })
         })
-
         res.send(logData);
     });
 })
@@ -83,8 +79,7 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
                 .status(404)
                 .end();
         }
-        else 
-        {
+        else {
             let output = [];
             result.forEach(workouts => {
                 output.push(workouts);
@@ -113,13 +108,9 @@ trackerRouter.get('/logs/:log_id/:workout_id', async (req, res) => {
     connection.query(sql, [log_id, workout_id], (error, result) => {
         if (error) throw error;
         if (result[0] === undefined ) {
-            res
-                .send("This workout does not exit")
-                .status(404)
-                .end();
+            res.send("This workout does not exist").status(404).end();
         }
-        else 
-        {
+        else {
             res.send(result[0])
         }
     });
@@ -205,9 +196,7 @@ trackerRouter.delete('/logs/:log_id', async (req, res) => {
         sql = `DELETE FROM logs WHERE id = ?`;
         connection.query(sql, [log_id], (error) => {
             if (error) throw error;
-            res
-                .status(200)
-                .json({ "Message" : "Log deleted" });
+            res.status(200).json({ "Message" : "Log deleted" });
         })
     })
 })
