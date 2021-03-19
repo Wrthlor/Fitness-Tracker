@@ -73,9 +73,9 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
                 ON workouts.exercise_id = exercises.id 
             JOIN metrics 
                 ON workouts.metrics_id = metrics.id 
-            WHERE workouts.logs_id = ${log_id} 
-            ORDER BY exercises.id`;    
-    connection.query(sql, (error, result) => {
+            WHERE workouts.logs_id = ? 
+            ORDER BY exercise_name, metrics.created_at`;    
+    connection.query(sql, [log_id], (error, result) => {
         if (error) throw error;
         if (result[0] == undefined ) {
             res
@@ -109,10 +109,9 @@ trackerRouter.get('/logs/:log_id/:workout_id', async (req, res) => {
                 ON workouts.exercise_id = exercises.id 
             JOIN metrics 
                 ON workouts.metrics_id = metrics.id 
-            WHERE workouts.logs_id = ${log_id} AND workouts.id = ${workout_id}`;
-    connection.query(sql, (error, result) => {
+            WHERE workouts.logs_id = ? AND workouts.id = ?`;
+    connection.query(sql, [log_id, workout_id], (error, result) => {
         if (error) throw error;
-
         if (result[0] === undefined ) {
             res
                 .send("This workout does not exit")
@@ -137,24 +136,29 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
         'reps': req.body.reps
     };
 
-    let sql = `INSERT INTO metrics (wgt, reps) VALUES (${workout.weight}, ${workout.reps})`;
-    connection.query(sql, (error, result) => {
+    let sql = `INSERT INTO metrics (wgt, reps) VALUES (?, ?)`;
+    connection.query(sql, [workout.weight, workout.reps], (error, result) => {
         if (error) throw error;
         //console.log(result.insertId);
         let metrics_id = result.insertId;
-        
-        sql = `SELECT id FROM exercises WHERE exercise_name LIKE '%${workout.exercise}%'`;
-        connection.query(sql, (error, result) => {
-            if (error) throw error;
-            //console.log(result[0].id);
-            exercise_id = result[0].id;
-            
-            sql = `INSERT INTO workouts (exercise_id, metrics_id, logs_id) VALUES (${exercise_id}, ${metrics_id}, ${log_id})`;
-            connection.query(sql, (error, result) => {
-                if (error) throw error;
-                workout.workout_id = result.insertId;
-                res.status(201).json(workout);
-            })
+        sql = `INSERT INTO workouts (
+                exercise_id, 
+                metrics_id, 
+                logs_id
+            )
+            VALUES (
+                (
+                    SELECT id
+                    FROM exercises
+                    WHERE exercise_name = ?
+                ),
+                ?,
+                ?
+            )`;
+        connection.query(sql, [workout.exercise, metrics_id, log_id], (error, result) => {
+            if(error) throw error;
+            workout.workout_id = result.insertId;
+            res.status(201).json(workout);
         })
     })
 })
@@ -168,20 +172,19 @@ trackerRouter.put('/logs/:log_id/:workout_id', async (req, res) => {
         'reps': req.body.reps
     };
 
-    let sql = `SELECT metrics_id FROM workouts WHERE id = ${workout_id}`;
-    connection.query(sql, (error, result) => {
+    let sql = `UPDATE metrics 
+            SET 
+                wgt = ?,
+                reps = ?
+            WHERE id = (
+                SELECT metrics_id
+                FROM workouts
+                WHERE id = ?
+            )`;
+    connection.query(sql, [workout.weight, workout.reps, workout_id], (error, result) => {
         if (error) throw error;
-        //console.log(result[0].metrics_id)
-        let metrics_id = result[0].metrics_id;
-
-        sql = `UPDATE metrics SET wgt = ${workout.weight}, reps = ${workout.reps} WHERE id = ${metrics_id}`;
-        connection.query(sql, (error) => {
-            if (error) throw error;
-            workout.metrics_id = metrics_id;
-            res
-                .status(200)
-                .json(workout);
-        })
+        console.log(result)
+        res.status(200).json(workout);
     })
 })
 
@@ -194,13 +197,13 @@ trackerRouter.delete('/logs/:log_id', async (req, res) => {
             FROM workouts
             INNER JOIN metrics
                 ON workouts.metrics_id = metrics.id
-            WHERE workouts.logs_id = ${log_id}`;
-    connection.query(sql, (error) => {
+            WHERE workouts.logs_id = ?`;
+    connection.query(sql, [log_id], (error) => {
         if (error) throw error;
 
         // Delete (now emptied) log
-        sql = `DELETE FROM logs WHERE id = ${log_id}`;
-        connection.query(sql, (error) => {
+        sql = `DELETE FROM logs WHERE id = ?`;
+        connection.query(sql, [log_id], (error) => {
             if (error) throw error;
             res
                 .status(200)
@@ -213,20 +216,16 @@ trackerRouter.delete('/logs/:log_id', async (req, res) => {
 trackerRouter.delete('/logs/:log_id/:workout_id', async (req, res) => {
     const workout_id = req.params.workout_id;
     
-    // Determine metrics_id 
-    let sql = `SELECT metrics_id FROM workouts WHERE id = ${workout_id}`;
-    connection.query(sql, (error, result) => {
+    // Delete metrics row, which deletes corresponding workout row (ON CASCADE DELETE constraint)
+    let sql = `DELETE FROM metrics 
+            WHERE id = (
+                SELECT metrics_id 
+                FROM workouts 
+                WHERE id = ?
+            )`;
+    connection.query(sql, [workout_id], (error) => {
         if (error) throw error;
-        let metrics_id = result[0].metrics_id;
-
-        // Delete metrics row, which deletes corresponding workout row (ON CASCADE DELETE constraint)
-        sql = `DELETE FROM metrics WHERE id = ${metrics_id}`;
-        connection.query(sql, (error) => {
-            if (error) throw error;
-            res
-                .status(200)
-                .json({ "Message" : "Workout deleted" });
-        })
+        res.status(200).json({ "Message" : "Workout deleted" });
     })
 })
 
