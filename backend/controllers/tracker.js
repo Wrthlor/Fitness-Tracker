@@ -16,12 +16,12 @@ trackerRouter.get('/', async (req, res) => {
 
 // HTTP GET request to list all existing exercises
 trackerRouter.get('/exercises', async (req, res) => {
-    let q = 'SELECT exercise_name FROM exercises';
+    let q = 'SELECT exercise_name, categories_id FROM exercises';
     connection.query(q, (error, result) => {
         if (error) throw error;
         let output = [];
         result.forEach(exercise => {
-            output.push(exercise.exercise_name);
+            output.push(exercise);
         })
         res.send(output);
     });
@@ -31,7 +31,7 @@ trackerRouter.get('/exercises', async (req, res) => {
 trackerRouter.get('/logs', async (req, res) => {
     let sql = `SELECT 
                 id, 
-                DATE_FORMAT(created_at, "%W, %m/%d/%Y") AS date 
+                DATE_FORMAT(created_at, "%W, %c/%e/%Y") AS date 
             FROM logs`;
     connection.query(sql, (error, result) => {
         if (error) throw error;
@@ -60,6 +60,7 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
     const log_id = req.params.log_id;
 
     let sql = `SELECT 
+                workouts.logs_id AS 'logs_id',
                 workouts.id AS 'workout_id', 
                 exercises.exercise_name AS 'lift', 
                 metrics.wgt AS 'weight', 

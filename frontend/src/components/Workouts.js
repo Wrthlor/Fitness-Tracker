@@ -1,39 +1,22 @@
 import React from 'react';
-
-// Displays list of sets (weight, reps) for matching exercise
-const Sets = ({ workouts, lift, onDelete }) => (
-    <ul>
-        {workouts.map((set) => {
-            if (set.lift === lift) {
-                return (
-                    <form key={set.workout_id} id={set.workout_id} onSubmit={onDelete}>
-                        <li key={set.workout_id}>
-                            {' '}
-                            {`${set.weight} lbs, ${set.reps} reps`}
-                            {' '}                            
-                            <button>Delete</button>
-                        </li>
-                    </form>
-                );
-            }
-            return "";
-        })}
-    </ul>
-);
+import Sets from './Sets';
 
 // Workout block - contains lift name and corresponding weight/reps
-const Workouts = ({ workouts, buttonPress }) => {
-    // Array of unique exercise (lift) names
-    const exercises = Array.from(new Set(workouts.map((element) => element.lift)));
+const Workouts = ({ loggedWorkouts, deleteButton }) => {
+    // Array of unique exercises, aka lifts
+    const exercises = Array.from(new Set(loggedWorkouts.map(element => element.lift)));
+
     return (
         <div>
-            {exercises.map((exercise) => {
-                if (exercise !== "Exercises") {
+            {exercises.map(lift => {
+                if (lift !== "Exercises") {
                     return (
-                        <div key={exercise} >
-                            <h3>{exercise}</h3>
-                            <Sets workouts={workouts} lift={exercise} onDelete={buttonPress} />
-                            <button>Update</button>
+                        <div key={lift} >
+                            <h4>{lift}</h4>
+                            <Sets 
+                                workouts={loggedWorkouts} 
+                                lift={lift} 
+                                deleteButton={deleteButton} />
                         </div>
                     );
                 }

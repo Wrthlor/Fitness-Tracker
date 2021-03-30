@@ -1,198 +1,51 @@
 import React, { useState } from 'react';
+
 import DatePicker from 'react-date-picker';
+import Logs from './components/Logs';
 
-import Workouts from './components/Workouts';
-import Exercises from './components/Exercises';
-
-const sampleWorkout = [
-    {
-        workout_id: 97,
-        lift: 'Overhead Press',
-        weight: 125,
-        reps: 5,
-    },
-    {
-        workout_id: 98,
-        lift: 'Overhead Press',
-        weight: 130,
-        reps: 5,
-    },
-    {
-        workout_id: 102,
-        lift: 'Overhead Press',
-        weight: 135,
-        reps: 5,
-    },
-    {
-        workout_id: 101,
-        lift: 'Deadlift',
-        weight: 285,
-        reps: 3,
-    },
-    {
-        workout_id: 103,
-        lift: 'Deadlift',
-        weight: 305,
-        reps: 3,
-    },
-    {
-        workout_id: 104,
-        lift: 'Deadlift',
-        weight: 315,
-        reps: 3,
-    },
-    {
-        workout_id: 200,
-        lift: 'Pull Up',
-        weight: 165,
-        reps: 5,
-    },
-    {
-        workout_id: 201,
-        lift: 'Pull Up',
-        weight: 170,
-        reps: 5,
-    },
-    {
-        workout_id: 202,
-        lift: 'Pull Up',
-        weight: 175,
-        reps: 5,
-    },
-];
-const exerciseList = [
-    'Ab-Wheel Rollout',
-    'Arnold Dumbbell Press',
-    'Barbell Calf Raise',
-    'Barbell Curl',
-    'Barbell Front Squat',
-    'Barbell Glute Bridge',
-    'Barbell Row',
-    'Barbell Shrug',
-    'Barbell Squat',
-    'Behind The Neck Barbell Press',
-    'Cable Crossover',
-    'Cable Crunch',
-    'Cable Curl',
-    'Cable Face Pull',
-    'Cable Overhead Triceps Extension',
-    'Chin Up',
-    'Close Grip Barbell Bench Press',
-    'Crunch',
-    'Crunch Machine',
-    'Cycling',
-    'Deadlift',
-    'Decline Barbell Bench Press',
-    'Decline Crunch',
-    'Decline Hammer Strength Chest Press',
-    'Donkey Calf Raise',
-    'Dragon Flag',
-    'Dumbbell Concentration Curl',
-    'Dumbbell Curl',
-    'Dumbbell Hammer Curl',
-    'Dumbbell Overhead Triceps Extension',
-    'Dumbbell Preacher Curl',
-    'Dumbbell Row',
-    'Elliptical Trainer',
-    'EZ-Bar Curl',
-    'EZ-Bar Preacher Curl',
-    'EZ-Bar Skullcrusher',
-    'Flat Barbell Bench Press',
-    'Flat Dumbbell Bench Press',
-    'Flat Dumbbell Fly',
-    'Front Dumbbell Raise',
-    'Glute-Ham Raise',
-    'Good Morning',
-    'Hammer Strength Row',
-    'Hammer Strength Shoulder Press',
-    'Hanging Knee Raise',
-    'Hanging Leg Raise',
-    'Incline Barbell Bench Press',
-    'Incline Dumbbell Bench Press',
-    'Incline Dumbbell Fly',
-    'Incline Hammer Strength Chest Press',
-    'Lat Pulldown',
-    'Lateral Dumbbell Raise',
-    'Lateral Machine Raise',
-    'Leg Extension Machine',
-    'Leg Press',
-    'Log Press',
-    'Lying Leg Curl Machine',
-    'Lying Triceps Extension',
-    'Machine Shrug',
-    'Neutral Chin Up',
-    'One-Arm Standing Dumbbell Press',
-    'Overhead Press',
-    'Parallel Bar Triceps Dip',
-    'Pendlay Row',
-    'Plank',
-    'Pull Up',
-    'Push Press',
-    'Rack Pull',
-    'Rear Delt Dumbbell Raise',
-    'Ring Dip',
-    'Romanian Deadlift',
-    'Rope Push Down',
-    'Rowing Machine',
-    'Running (Outdoor)',
-    'Running (Treadmill)',
-    'Seated Cable Row',
-    'Seated Calf Raise Machine',
-    'Seated Dumbbell Press',
-    'Seated Incline Dumbbell Curl',
-    'Seated Leg Curl Machine',
-    'Seated Machine Curl',
-    'Seated Machine Fly',
-    'Side Plank',
-    'Smith Machine Close Grip Bench Press',
-    'Smith Machine Overhead Press',
-    'Standing Calf Raise Machine',
-    'Stationary Bike',
-    'Stiff-Legged Deadlift',
-    'Straight-Arm Cable Pushdown',
-    'Sumo Deadlift',
-    'Swimming',
-    'T-Bar Row',
-    'V-Bar Push Down',
-    'Walking',
-];
+import sampleData from './sampleData/data';
 
 const App = () => {
+    const [workouts, setWorkouts] = useState(sampleData.sampleWorkouts);
+    const [newWorkout, setNewWorkout] = useState({ lift: 'Exercises', weight: "", reps: "" });
+    
     const [date, setDate] = useState(new Date());
-    const [workouts, setWorkouts] = useState(sampleWorkout);
-    const [newWorkout, setNewWorkout] = useState({ lift: 'Exercises', weight: 0, reps: 0 });
+    const [logs, setLogs ] = useState(sampleData.sampleLogs);
+
+    // Formats date
+    let formattedDate = date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        month: 'numeric', 
+        day: 'numeric', 
+        year: 'numeric' });
 
     // Placeholder function for RNG workout_id's
     const newId = () => {
-        const rng = Math.floor(Math.random() * 100000000000000000);
+        const rng = Math.floor(Math.random() * 1000000);
         if (workouts.map((workout) => workout.workout_id).includes(rng)) 
             return newId();
         else 
             return rng;
     };
 
-    const onClick = (event) => {
-        event.preventDefault();
-        console.log('Button pressed', event.target);
-    };
-
+    // Saves weight/reps when save button pressed
     const handleSave = (event) => {
         event.preventDefault();
         const workoutObject = {
+            logs_id: getLogId(logs, formattedDate),
             workout_id: newId(),
             ...newWorkout,
         };
         setWorkouts(workouts.concat(workoutObject));
-        setNewWorkout({ lift: newWorkout.lift, weight: 0, reps: 0 });
-    };
-
-    const handleNewWorkout = (event) => {
         setNewWorkout({
-            ...newWorkout,
-            [event.target.name]: event.target.value,
+            lift: newWorkout.lift, 
+            weight: "", 
+            reps: "",
+            logs_id: newWorkout.logs_id
         });
     };
 
+    // Deletes selected workout
     const handleDelete = (event) => {
         event.preventDefault();
         const id = Number(event.target.id);
@@ -204,35 +57,81 @@ const App = () => {
         setWorkouts(
             deleteById(workouts, id)
         );
-    }
+    };
+    
+    // Returns log id
+    const getLogId = (logs, date) => {
+        const log = logs.find(log => log.date === date);
+        if (log !== undefined)
+            return log.id;
+        return "";
+    };
 
-    // const handleUpdate = (event) => {
-    //     event.preventDefault();
-    // }
+    // Check if there's an existing log for date
+    const checkExistingLog = (logs, date) => {
+        return logs.map(log => log.date === date).includes(true);
+    };
 
+    // Creates new log if existing log does not exist
+    const handleNewLog = () => {
+        if (!checkExistingLog(logs, formattedDate)) {
+            const logObject = {
+                id: newId(),
+                date: formattedDate
+            };    
+            setLogs(logs.concat(logObject));
+        }
+        else {
+            console.log("Log already exists");
+        }
+    };
+
+    // Creates new workout 
+    const handleNewWorkout = (event) => {
+        let target = event.target;
+        setNewWorkout({
+            ...newWorkout,
+            logs_id: getLogId(logs, formattedDate),
+            [target.name]: target.value,
+        });
+
+    };
+
+    // Gets an array of workouts that match the current log_id / date
+    const getWorkouts = (sampleLogs, workouts) => {
+        if (checkExistingLog(sampleLogs, formattedDate)) {
+            let log_id = getLogId(sampleLogs, formattedDate);
+            if (log_id !== undefined) {
+                return workouts.filter(workout => workout.logs_id === log_id);
+            }
+        }
+        return [];
+    };
+    
     return (
         <div>
-            <form onSubmit={onClick}>
-                <DatePicker 
-                    onChange={setDate}
-                    value={date} 
-                    clearIcon={null} 
-                    showLeadingZeros={true} />
-                <br />
-                <button>New Workout</button>
-            </form>
-
-            <form onSubmit={handleSave}>
-                <h2>Start New Workout</h2>
-                <Exercises
-                    exercises={exerciseList}
-                    newWorkout={newWorkout}                     
-                    handleNewWorkout={handleNewWorkout} />
-            </form>
-
-            <Workouts 
-                workouts={workouts} 
-                buttonPress={handleDelete} />
+            <DatePicker 
+                onChange={setDate}
+                value={date} 
+                clearIcon={null} 
+                showLeadingZeros={true} />
+            <br />
+            
+            {checkExistingLog(logs, formattedDate) ?
+                (
+                    <Logs 
+                        handleSave={handleSave}
+                        newWorkout={newWorkout}
+                        handleNewWorkout={handleNewWorkout}
+                        loggedWorkouts={getWorkouts(logs, workouts)}
+                        deleteButton={handleDelete} />
+                ) :
+                (
+                    <button onClick={handleNewLog}>
+                        Create Workout Log
+                    </button>
+                )
+            }
         </div>
     );
 };
