@@ -129,45 +129,55 @@ const exerciseList = [
 const exerciseCategory = [
     {
         id: 1,
-        category_name: "Shoulders"
+        name: "Shoulders"
     },
     {
         id: 2,
-        category_name: "Triceps"
+        name: "Triceps"
     },
     {
         id: 3,
-        category_name: "Biceps"
+        name: "Biceps"
     },
     {
         id: 4,
-        category_name: "Chest"
+        name: "Chest"
     },
     {
         id: 5,
-        category_name: "Back"
+        name: "Back"
     },
     {
         id: 6,
-        category_name: "Legs"
+        name: "Legs"
     },
     {
         id: 7,
-        category_name: "Abs"
+        name: "Abs"
     },
     {
         id: 8,
-        category_name: "Cardio"
+        name: "Cardio"
     },
-]
+];
 
-// const exerciseList_with_ids = [[{"id":1,"exercise_name":"Arnold Dumbbell Press","categories_id":1},{"id":2,"exercise_name":"Behind The Neck Barbell Press","categories_id":1},{"id":3,"exercise_name":"Cable Face Pull","categories_id":1},{"id":4,"exercise_name":"Front Dumbbell Raise","categories_id":1},{"id":5,"exercise_name":"Hammer Strength Shoulder Press","categories_id":1},{"id":6,"exercise_name":"Lateral Dumbbell Raise","categories_id":1},{"id":7,"exercise_name":"Lateral Machine Raise","categories_id":1},{"id":8,"exercise_name":"Log Press","categories_id":1},{"id":9,"exercise_name":"One-Arm Standing Dumbbell Press","categories_id":1},{"id":10,"exercise_name":"Overhead Press","categories_id":1},{"id":11,"exercise_name":"Push Press","categories_id":1},{"id":12,"exercise_name":"Rear Delt Dumbbell Raise","categories_id":1},{"id":13,"exercise_name":"Seated Dumbbell Press","categories_id":1},{"id":14,"exercise_name":"Smith Machine Overhead Press","categories_id":1},{"id":15,"exercise_name":"Cable Overhead Triceps Extension","categories_id":2},{"id":16,"exercise_name":"Close Grip Barbell Bench Press","categories_id":2},{"id":17,"exercise_name":"Dumbbell Overhead Triceps Extension","categories_id":2},{"id":18,"exercise_name":"EZ-Bar Skullcrusher","categories_id":2},{"id":19,"exercise_name":"Lying Triceps Extension","categories_id":2},{"id":20,"exercise_name":"Parallel Bar Triceps Dip","categories_id":2},{"id":21,"exercise_name":"Ring Dip","categories_id":2},{"id":22,"exercise_name":"Rope Push Down","categories_id":2},{"id":23,"exercise_name":"Smith Machine Close Grip Bench Press","categories_id":2},{"id":24,"exercise_name":"V-Bar Push Down","categories_id":2},{"id":25,"exercise_name":"Barbell Curl","categories_id":3},{"id":26,"exercise_name":"Cable Curl","categories_id":3},{"id":27,"exercise_name":"Dumbbell Concentration Curl","categories_id":3},{"id":28,"exercise_name":"Dumbbell Curl","categories_id":3},{"id":29,"exercise_name":"Dumbbell Hammer Curl","categories_id":3},{"id":30,"exercise_name":"Dumbbell Preacher Curl","categories_id":3},{"id":31,"exercise_name":"EZ-Bar Curl","categories_id":3},{"id":32,"exercise_name":"EZ-Bar Preacher Curl","categories_id":3},{"id":33,"exercise_name":"Seated Incline Dumbbell Curl","categories_id":3},{"id":34,"exercise_name":"Seated Machine Curl","categories_id":3},{"id":35,"exercise_name":"Cable Crossover","categories_id":4},{"id":36,"exercise_name":"Decline Barbell Bench Press","categories_id":4},{"id":37,"exercise_name":"Decline Hammer Strength Chest Press","categories_id":4},{"id":38,"exercise_name":"Flat Barbell Bench Press","categories_id":4},{"id":39,"exercise_name":"Flat Dumbbell Bench Press","categories_id":4},{"id":40,"exercise_name":"Flat Dumbbell Fly","categories_id":4},{"id":41,"exercise_name":"Incline Barbell Bench Press","categories_id":4},{"id":42,"exercise_name":"Incline Dumbbell Bench Press","categories_id":4},{"id":43,"exercise_name":"Incline Dumbbell Fly","categories_id":4},{"id":44,"exercise_name":"Incline Hammer Strength Chest Press","categories_id":4},{"id":45,"exercise_name":"Seated Machine Fly","categories_id":4},{"id":46,"exercise_name":"Barbell Row","categories_id":5},{"id":47,"exercise_name":"Barbell Shrug","categories_id":5},{"id":48,"exercise_name":"Chin Up","categories_id":5},{"id":49,"exercise_name":"Deadlift","categories_id":5},{"id":50,"exercise_name":"Dumbbell Row","categories_id":5},{"id":51,"exercise_name":"Good Morning","categories_id":5},{"id":52,"exercise_name":"Hammer Strength Row","categories_id":5},{"id":53,"exercise_name":"Lat Pulldown","categories_id":5},{"id":54,"exercise_name":"Machine Shrug","categories_id":5},{"id":55,"exercise_name":"Neutral Chin Up","categories_id":5},{"id":56,"exercise_name":"Pendlay Row","categories_id":5},{"id":57,"exercise_name":"Pull Up","categories_id":5},{"id":58,"exercise_name":"Rack Pull","categories_id":5},{"id":59,"exercise_name":"Seated Cable Row","categories_id":5},{"id":60,"exercise_name":"Straight-Arm Cable Pushdown","categories_id":5},{"id":61,"exercise_name":"T-Bar Row","categories_id":5},{"id":62,"exercise_name":"Barbell Calf Raise","categories_id":6},{"id":63,"exercise_name":"Barbell Front Squat","categories_id":6},{"id":64,"exercise_name":"Barbell Glute Bridge","categories_id":6},{"id":65,"exercise_name":"Barbell Squat","categories_id":6},{"id":66,"exercise_name":"Donkey Calf Raise","categories_id":6},{"id":67,"exercise_name":"Glute-Ham Raise","categories_id":6},{"id":68,"exercise_name":"Leg Extension Machine","categories_id":6},{"id":69,"exercise_name":"Leg Press","categories_id":6},{"id":70,"exercise_name":"Lying Leg Curl Machine","categories_id":6},{"id":71,"exercise_name":"Romanian Deadlift","categories_id":6},{"id":72,"exercise_name":"Seated Calf Raise Machine","categories_id":6},{"id":73,"exercise_name":"Seated Leg Curl Machine","categories_id":6},{"id":74,"exercise_name":"Standing Calf Raise Machine","categories_id":6},{"id":75,"exercise_name":"Stiff-Legged Deadlift","categories_id":6},{"id":76,"exercise_name":"Sumo Deadlift","categories_id":6},{"id":77,"exercise_name":"Ab-Wheel Rollout","categories_id":7},{"id":78,"exercise_name":"Cable Crunch","categories_id":7},{"id":79,"exercise_name":"Crunch","categories_id":7},{"id":80,"exercise_name":"Crunch Machine","categories_id":7},{"id":81,"exercise_name":"Decline Crunch","categories_id":7},{"id":82,"exercise_name":"Dragon Flag","categories_id":7},{"id":83,"exercise_name":"Hanging Knee Raise","categories_id":7},{"id":84,"exercise_name":"Hanging Leg Raise","categories_id":7},{"id":85,"exercise_name":"Plank","categories_id":7},{"id":86,"exercise_name":"Side Plank","categories_id":7},{"id":87,"exercise_name":"Cycling","categories_id":8},{"id":88,"exercise_name":"Elliptical Trainer","categories_id":8},{"id":89,"exercise_name":"Rowing Machine","categories_id":8},{"id":90,"exercise_name":"Running (Outdoor)","categories_id":8},{"id":91,"exercise_name":"Running (Treadmill)","categories_id":8},{"id":92,"exercise_name":"Stationary Bike","categories_id":8},{"id":93,"exercise_name":"Swimming","categories_id":8},{"id":94,"exercise_name":"Walking","categories_id":8}]]
+const exerciseList_with_ids = [
+    {"id":1,"name":"Arnold Dumbbell Press","categories_id":1},{"id":2,"name":"Behind The Neck Barbell Press","categories_id":1},{"id":3,"name":"Cable Face Pull","categories_id":1},{"id":4,"name":"Front Dumbbell Raise","categories_id":1},{"id":5,"name":"Hammer Strength Shoulder Press","categories_id":1},{"id":6,"name":"Lateral Dumbbell Raise","categories_id":1},{"id":7,"name":"Lateral Machine Raise","categories_id":1},{"id":8,"name":"Log Press","categories_id":1},{"id":9,"name":"One-Arm Standing Dumbbell Press","categories_id":1},{"id":10,"name":"Overhead Press","categories_id":1},{"id":11,"name":"Push Press","categories_id":1},{"id":12,"name":"Rear Delt Dumbbell Raise","categories_id":1},{"id":13,"name":"Seated Dumbbell Press","categories_id":1},{"id":14,"name":"Smith Machine Overhead Press","categories_id":1},
+    {"id":15,"name":"Cable Overhead Triceps Extension","categories_id":2},{"id":16,"name":"Close Grip Barbell Bench Press","categories_id":2},{"id":17,"name":"Dumbbell Overhead Triceps Extension","categories_id":2},{"id":18,"name":"EZ-Bar Skullcrusher","categories_id":2},{"id":19,"name":"Lying Triceps Extension","categories_id":2},{"id":20,"name":"Parallel Bar Triceps Dip","categories_id":2},{"id":21,"name":"Ring Dip","categories_id":2},{"id":22,"name":"Rope Push Down","categories_id":2},{"id":23,"name":"Smith Machine Close Grip Bench Press","categories_id":2},{"id":24,"name":"V-Bar Push Down","categories_id":2},
+    {"id":25,"name":"Barbell Curl","categories_id":3},{"id":26,"name":"Cable Curl","categories_id":3},{"id":27,"name":"Dumbbell Concentration Curl","categories_id":3},{"id":28,"name":"Dumbbell Curl","categories_id":3},{"id":29,"name":"Dumbbell Hammer Curl","categories_id":3},{"id":30,"name":"Dumbbell Preacher Curl","categories_id":3},{"id":31,"name":"EZ-Bar Curl","categories_id":3},{"id":32,"name":"EZ-Bar Preacher Curl","categories_id":3},{"id":33,"name":"Seated Incline Dumbbell Curl","categories_id":3},{"id":34,"name":"Seated Machine Curl","categories_id":3},
+    {"id":35,"name":"Cable Crossover","categories_id":4},{"id":36,"name":"Decline Barbell Bench Press","categories_id":4},{"id":37,"name":"Decline Hammer Strength Chest Press","categories_id":4},{"id":38,"name":"Flat Barbell Bench Press","categories_id":4},{"id":39,"name":"Flat Dumbbell Bench Press","categories_id":4},{"id":40,"name":"Flat Dumbbell Fly","categories_id":4},{"id":41,"name":"Incline Barbell Bench Press","categories_id":4},{"id":42,"name":"Incline Dumbbell Bench Press","categories_id":4},{"id":43,"name":"Incline Dumbbell Fly","categories_id":4},{"id":44,"name":"Incline Hammer Strength Chest Press","categories_id":4},{"id":45,"name":"Seated Machine Fly","categories_id":4},
+    {"id":46,"name":"Barbell Row","categories_id":5},{"id":47,"name":"Barbell Shrug","categories_id":5},{"id":48,"name":"Chin Up","categories_id":5},{"id":49,"name":"Deadlift","categories_id":5},{"id":50,"name":"Dumbbell Row","categories_id":5},{"id":51,"name":"Good Morning","categories_id":5},{"id":52,"name":"Hammer Strength Row","categories_id":5},{"id":53,"name":"Lat Pulldown","categories_id":5},{"id":54,"name":"Machine Shrug","categories_id":5},{"id":55,"name":"Neutral Chin Up","categories_id":5},{"id":56,"name":"Pendlay Row","categories_id":5},{"id":57,"name":"Pull Up","categories_id":5},{"id":58,"name":"Rack Pull","categories_id":5},{"id":59,"name":"Seated Cable Row","categories_id":5},{"id":60,"name":"Straight-Arm Cable Pushdown","categories_id":5},{"id":61,"name":"T-Bar Row","categories_id":5},
+    {"id":62,"name":"Barbell Calf Raise","categories_id":6},{"id":63,"name":"Barbell Front Squat","categories_id":6},{"id":64,"name":"Barbell Glute Bridge","categories_id":6},{"id":65,"name":"Barbell Squat","categories_id":6},{"id":66,"name":"Donkey Calf Raise","categories_id":6},{"id":67,"name":"Glute-Ham Raise","categories_id":6},{"id":68,"name":"Leg Extension Machine","categories_id":6},{"id":69,"name":"Leg Press","categories_id":6},{"id":70,"name":"Lying Leg Curl Machine","categories_id":6},{"id":71,"name":"Romanian Deadlift","categories_id":6},{"id":72,"name":"Seated Calf Raise Machine","categories_id":6},{"id":73,"name":"Seated Leg Curl Machine","categories_id":6},{"id":74,"name":"Standing Calf Raise Machine","categories_id":6},{"id":75,"name":"Stiff-Legged Deadlift","categories_id":6},{"id":76,"name":"Sumo Deadlift","categories_id":6},
+    {"id":77,"name":"Ab-Wheel Rollout","categories_id":7},{"id":78,"name":"Cable Crunch","categories_id":7},{"id":79,"name":"Crunch","categories_id":7},{"id":80,"name":"Crunch Machine","categories_id":7},{"id":81,"name":"Decline Crunch","categories_id":7},{"id":82,"name":"Dragon Flag","categories_id":7},{"id":83,"name":"Hanging Knee Raise","categories_id":7},{"id":84,"name":"Hanging Leg Raise","categories_id":7},{"id":85,"name":"Plank","categories_id":7},{"id":86,"name":"Side Plank","categories_id":7},
+    {"id":87,"name":"Cycling","categories_id":8},{"id":88,"name":"Elliptical Trainer","categories_id":8},{"id":89,"name":"Rowing Machine","categories_id":8},{"id":90,"name":"Running (Outdoor)","categories_id":8},{"id":91,"name":"Running (Treadmill)","categories_id":8},{"id":92,"name":"Stationary Bike","categories_id":8},{"id":93,"name":"Swimming","categories_id":8},{"id":94,"name":"Walking","categories_id":8}
+];
 
 const sampleData = {
     sampleLogs,
     sampleWorkouts,
     exerciseList,
-    exerciseCategory
+    exerciseCategory,
+    exerciseList_with_ids
 };
 
 export default sampleData;

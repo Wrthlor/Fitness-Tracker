@@ -7,7 +7,7 @@ import sampleData from './sampleData/data';
 
 const App = () => {
     const [workouts, setWorkouts] = useState(sampleData.sampleWorkouts);
-    const [newWorkout, setNewWorkout] = useState({ lift: 'Exercises', weight: "", reps: "" });
+    const [newWorkout, setNewWorkout] = useState({ lift: 'Exercises', weight: '', reps: '' });
     
     const [date, setDate] = useState(new Date());
     const [logs, setLogs ] = useState(sampleData.sampleLogs);
@@ -39,8 +39,8 @@ const App = () => {
         setWorkouts(workouts.concat(workoutObject));
         setNewWorkout({
             lift: newWorkout.lift, 
-            weight: "", 
-            reps: "",
+            weight: '', 
+            reps: '',
             logs_id: newWorkout.logs_id
         });
     };
@@ -88,13 +88,12 @@ const App = () => {
 
     // Creates new workout 
     const handleNewWorkout = (event) => {
-        let target = event.target;
+        // let target = event.target;
         setNewWorkout({
             ...newWorkout,
             logs_id: getLogId(logs, formattedDate),
-            [target.name]: target.value,
+            [event.target.name]: event.target.value,
         });
-
     };
 
     // Gets an array of workouts that match the current log_id / date
@@ -107,14 +106,15 @@ const App = () => {
         }
         return [];
     };
-    
+
     return (
         <div>
             <DatePicker 
                 onChange={setDate}
                 value={date} 
                 clearIcon={null} 
-                showLeadingZeros={true} />
+                showLeadingZeros={true} 
+            />
             <br />
             
             {checkExistingLog(logs, formattedDate) ?
@@ -124,7 +124,8 @@ const App = () => {
                         newWorkout={newWorkout}
                         handleNewWorkout={handleNewWorkout}
                         loggedWorkouts={getWorkouts(logs, workouts)}
-                        deleteButton={handleDelete} />
+                        deleteButton={handleDelete} 
+                    />
                 ) :
                 (
                     <button onClick={handleNewLog}>

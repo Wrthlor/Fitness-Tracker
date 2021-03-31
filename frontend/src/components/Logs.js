@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Workouts from './Workouts';
-import Exercises from './Exercises';
+import Categories from './Categories';
 
 const Logs = ({ handleSave, newWorkout, handleNewWorkout, loggedWorkouts, deleteButton }) => {
 
@@ -9,14 +9,16 @@ const Logs = ({ handleSave, newWorkout, handleNewWorkout, loggedWorkouts, delete
         <div>
             <form onSubmit={handleSave}>
                 <h4>Start New Workout</h4>
-                <Exercises
+                <Categories
                     newWorkout={newWorkout}
-                    handleNewWorkout={handleNewWorkout} />
+                    handleNewWorkout={handleNewWorkout} 
+                />
             </form>
 
             <Workouts 
                 loggedWorkouts={loggedWorkouts} 
-                deleteButton={deleteButton} /> 
+                deleteButton={deleteButton} 
+            /> 
         </div>
     );
 }
