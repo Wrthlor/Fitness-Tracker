@@ -30,7 +30,7 @@ const Dropdown = ({
                 }
             </select>
         </div>
-    )
+    );
 };
 
 export default Dropdown;

@@ -20,7 +20,7 @@ const Sets = ({ workouts, lift, deleteButton }) => {
                 return "";
             })}
         </ul>
-    )
+    );
 };
 
 export default Sets;

@@ -38,7 +38,7 @@ const App = () => {
         };
         setWorkouts(workouts.concat(workoutObject));
         setNewWorkout({
-            lift: newWorkout.lift, 
+            lift: 'Exercises', 
             weight: '', 
             reps: '',
             logs_id: newWorkout.logs_id
@@ -88,7 +88,6 @@ const App = () => {
 
     // Creates new workout 
     const handleNewWorkout = (event) => {
-        // let target = event.target;
         setNewWorkout({
             ...newWorkout,
             logs_id: getLogId(logs, formattedDate),
@@ -117,21 +116,18 @@ const App = () => {
             />
             <br />
             
-            {checkExistingLog(logs, formattedDate) ?
-                (
+            {checkExistingLog(logs, formattedDate) 
+                ? (
                     <Logs 
                         handleSave={handleSave}
                         newWorkout={newWorkout}
                         handleNewWorkout={handleNewWorkout}
                         loggedWorkouts={getWorkouts(logs, workouts)}
-                        deleteButton={handleDelete} 
-                    />
-                ) :
-                (
+                        deleteButton={handleDelete} /> ) 
+                : (
                     <button onClick={handleNewLog}>
                         Create Workout Log
-                    </button>
-                )
+                    </button> )
             }
         </div>
     );

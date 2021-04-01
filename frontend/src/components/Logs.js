@@ -1,21 +1,19 @@
 import React from 'react';
 
-import Workouts from './Workouts';
-import Categories from './Categories';
+import ExistingWorkouts from './ExistingWorkouts';
+import NewWorkout from './NewWorkout';
 
 const Logs = ({ handleSave, newWorkout, handleNewWorkout, loggedWorkouts, deleteButton }) => {
 
     return (
         <div>
-            <form onSubmit={handleSave}>
-                <h4>Start New Workout</h4>
-                <Categories
-                    newWorkout={newWorkout}
-                    handleNewWorkout={handleNewWorkout} 
-                />
-            </form>
+            <NewWorkout
+                handleSave={handleSave}
+                newWorkout={newWorkout}
+                handleNewWorkout={handleNewWorkout} 
+            />
 
-            <Workouts 
+            <ExistingWorkouts 
                 loggedWorkouts={loggedWorkouts} 
                 deleteButton={deleteButton} 
             /> 

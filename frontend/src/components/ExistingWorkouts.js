@@ -2,7 +2,7 @@ import React from 'react';
 import Sets from './Sets';
 
 // Workout block - contains lift name and corresponding weight/reps
-const Workouts = ({ loggedWorkouts, deleteButton }) => {
+const ExistingWorkouts = ({ loggedWorkouts, deleteButton }) => {
     // Array of unique exercises, aka lifts
     const exercises = Array.from(new Set(loggedWorkouts.map(element => element.lift)));
 
@@ -26,4 +26,4 @@ const Workouts = ({ loggedWorkouts, deleteButton }) => {
     );
 };
 
-export default Workouts;
+export default ExistingWorkouts;
