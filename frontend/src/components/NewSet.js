@@ -1,7 +1,8 @@
 import React from 'react';
 import Dropdown from './Dropdown';
 
-const NewSet = ({ exerciseList, newWorkout, handleNewWorkout }) => {
+const NewSet = ({ exerciseList, newWorkout, getExercise, handleNewWorkout }) => {
+    
     return (
         <div>
             <Dropdown
@@ -10,7 +11,7 @@ const NewSet = ({ exerciseList, newWorkout, handleNewWorkout }) => {
                 hidden={true}
                 disabled={true}
                 placeholder={'Exercises'}
-                onChange={handleNewWorkout} />
+                onChange={e => {getExercise(e); handleNewWorkout(e)} } />
             <input
                 name="weight"
                 type="number"
@@ -27,7 +28,7 @@ const NewSet = ({ exerciseList, newWorkout, handleNewWorkout }) => {
                 placeholder="Reps"
                 value={newWorkout.reps}
                 onChange={handleNewWorkout} />
-            <button>
+            <button >
                 Save
             </button>
         </div>

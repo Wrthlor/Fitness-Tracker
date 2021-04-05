@@ -11,6 +11,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
     const categories = sampleData.exerciseCategory;
     const exercises = sampleData.exerciseList_with_ids;
     const [exerciseList, setExerciseList ] = useState(exercises);
+    const [selectedExercise, setSelected] = useState('Exercises');
     
     // Adjusts what exercises are shown according to category selected 
     const handleExerciseList = (event) => {
@@ -24,7 +25,10 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
         setExerciseList(categorizedExercises);
     };
 
-    const handleClicks = (event) => {
+    // Gets selected exercise from grandchild component: Dropdown
+    const getExercise = (event) => setSelected(event.target.value);
+
+    const handleClicks = (event) => {            
         switch (event.target.name) {
             case 'New':
                 setShow({
@@ -48,10 +52,13 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                 })
                 break;
             default: 
-                setShow({
-                    ...show,
-                    workout: false
-                })
+                if (selectedExercise !== 'Exercises') {
+                    setShow({
+                        ...show,
+                        workout: false
+                    })
+                    setSelected("");
+                }
                 break;
         };
     };
@@ -65,7 +72,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
             {show.workout &&  
                 <div onSubmit={handleClicks}> 
-                    <form onSubmit={handleSave}>
+                    <form name='test' onSubmit={handleSave}>
                         <br />
                         {show.categories && 
                             <div onChange={handleClicks}>
@@ -86,6 +93,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                                 <NewSet 
                                     exerciseList={exerciseList}
                                     newWorkout={newWorkout}
+                                    getExercise={getExercise}
                                     handleNewWorkout={handleNewWorkout} />
                             </div> 
                         }
