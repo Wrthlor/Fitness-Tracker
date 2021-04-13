@@ -1,25 +1,52 @@
-import React, { useState } from 'react';
-import sampleData from '../sampleData/data';
+import React, { useEffect, useState } from 'react';
+// import sampleData from '../sampleData/data';
 
 import Dropdown from './Dropdown';
 import NewSet from './NewSet';
+
+import exerciseData from '../services/exercises';
 
 const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
     const [show, setShow] = useState({ workout: false, categories: false, exercises: false})
 
-    const categories = sampleData.exerciseCategory;
-    const exercises = sampleData.exerciseList_with_ids;
-    const [exerciseList, setExerciseList ] = useState(exercises);
+    const [categoryList, setCategoryList ] = useState([{ id: 0, name: 'Loading...'}]);
+    const [initialExercises, setInitial ] = useState([]);
+    const [exerciseList, setExerciseList ] = useState([]);
     const [selectedExercise, setSelected] = useState('Exercises');
+    // const mountedRef = useRef(false);
     
+    // Categories data
+    useEffect(() => {
+        let mounted = true;
+        exerciseData
+            .getCategories()
+            .then(categories => mounted && setCategoryList(categories))
+            .catch(error => console.log(error));
+        return () => {
+            mounted = false;
+        }
+    }, []);
+
+    // Exercises data
+    useEffect(() => {
+        let mounted = true;
+        exerciseData
+            .getExercises()
+            .then(exercises => mounted && setInitial(exercises))
+            .catch(error => console.log(error));
+        return () => {
+            mounted = false;
+        }
+    }, []);
+
     // Adjusts what exercises are shown according to category selected 
     const handleExerciseList = (event) => {
         event.preventDefault();
 
-        let targetCategory = categories.filter(category => 
+        let targetCategory = categoryList.filter(category => 
             category.name === event.target.value);
-        let categorizedExercises = exercises.filter(exercise => 
+        let categorizedExercises = initialExercises.filter(exercise => 
             exercise.categories_id === targetCategory[0].id);
         
         setExerciseList(categorizedExercises);
@@ -38,11 +65,16 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                 })
                 break;
             case 'Category':
-                setShow({
-                    ...show,
-                    categories: false,
-                    exercises: true
-                })
+                if (categoryList[0].id !== 0) {
+                    setShow({
+                        ...show,
+                        categories: false,
+                        exercises: true
+                    })
+                }
+                else {
+                    console.log('Loading...')
+                }
                 break;
             case 'Back':
                 setShow({
@@ -52,7 +84,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                 })
                 break;
             default: 
-                if (selectedExercise !== 'Exercises') {
+                if (selectedExercise !== '' && selectedExercise !== 'Exercises') {
                     setShow({
                         ...show,
                         workout: false
@@ -78,7 +110,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                             <div onChange={handleClicks}>
                                 <Dropdown 
                                     name='Category'
-                                    list={categories}
+                                    list={categoryList}
                                     hidden={true}
                                     disabled={true}
                                     placeholder={'Categories'}

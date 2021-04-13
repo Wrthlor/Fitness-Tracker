@@ -1,48 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import DatePicker from 'react-date-picker';
 import Logs from './components/Logs';
 
-import sampleData from './sampleData/data';
+import logData from './services/logs';
 
 const App = () => {
-    const [workouts, setWorkouts] = useState(sampleData.sampleWorkouts);
+    const [workouts, setWorkouts] = useState([]);
     const [newWorkout, setNewWorkout] = useState({ lift: 'Exercises', weight: '', reps: '' });
     
     const [date, setDate] = useState(new Date());
-    const [logs, setLogs ] = useState(sampleData.sampleLogs);
+    const [logs, setLogs ] = useState([]);
 
     // Formats date
-    let formattedDate = date.toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        month: 'numeric', 
-        day: 'numeric', 
-        year: 'numeric' });
+    let formattedDate = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+    let mySQL_date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+
+    // Logs data
+    useEffect(() => {
+        logData
+            .getLogs()
+            .then(logs => setLogs(logs))
+            .catch(error => console.log(error));
+    }, [])
+
+    // Workouts data
+    useEffect(() => {
+        logData
+            .getWorkouts()
+            .then(workouts => setWorkouts(workouts))
+            .catch(error => console.log(error));
+    }, [])
 
     // Placeholder function for RNG workout_id's
-    const newId = () => {
-        const rng = Math.floor(Math.random() * 1000000);
-        if (workouts.map((workout) => workout.workout_id).includes(rng)) 
-            return newId();
-        else 
-            return rng;
-    };
+    // const newId = () => {
+    //     const rng = Math.floor(Math.random() * 1000000);
+    //     if (workouts.map((workout) => workout.workout_id).includes(rng)) 
+    //         return newId();
+    //     else 
+    //         return rng;
+    // };
 
     // Saves weight/reps when save button pressed
     const handleSave = (event) => {
         event.preventDefault();
-        const workoutObject = {
-            logs_id: getLogId(logs, formattedDate),
-            workout_id: newId(),
-            ...newWorkout,
+        let workoutObject = {
+            ...newWorkout
         };
-        setWorkouts(workouts.concat(workoutObject));
-        setNewWorkout({
-            lift: 'Exercises', 
-            weight: '', 
-            reps: '',
-            logs_id: newWorkout.logs_id
-        });
+
+        logData
+            .saveWorkout(getLogId(logs, formattedDate), workoutObject)
+            .then(savedWorkout => {
+                workoutObject = {
+                    workout_id: savedWorkout.workout_id,
+                    ...workoutObject
+                }
+                setWorkouts(workouts.concat(workoutObject));
+                setNewWorkout({
+                    lift: 'Exercises', 
+                    weight: '', 
+                    reps: '',
+                    logs_id: newWorkout.logs_id
+                })
+            })
+            .catch(error => console.log(error));
     };
 
     // Deletes selected workout
@@ -53,10 +74,15 @@ const App = () => {
         const deleteById = (arr, id) => {
             return arr.filter(workout => workout.workout_id !== id);
         }
-
-        setWorkouts(
-            deleteById(workouts, id)
-        );
+        logData
+            .deleteWorkout(getLogId(logs, formattedDate), id)
+            .then(() => {
+                setWorkouts(
+                    deleteById(workouts, id)
+                );
+                console.log(`Workout id: ${id} deleted`)
+            })
+            .catch(error => console.log(error));
     };
     
     // Returns log id
@@ -68,18 +94,25 @@ const App = () => {
     };
 
     // Check if there's an existing log for date
-    const checkExistingLog = (logs, date) => {
-        return logs.map(log => log.date === date).includes(true);
-    };
+    const checkExistingLog = (logs, date) => logs.map(log => log.date === date).includes(true);
 
     // Creates new log if existing log does not exist
     const handleNewLog = () => {
-        if (!checkExistingLog(logs, formattedDate)) {
-            const logObject = {
-                id: newId(),
-                date: formattedDate
-            };    
-            setLogs(logs.concat(logObject));
+        if (!checkExistingLog(logs, formattedDate)) {     
+            let logObject = {
+                date: mySQL_date
+            }
+            
+            logData
+                .createLog(logObject)
+                .then(newLog => {
+                    logObject = {
+                        id: newLog.id,
+                        date: formattedDate
+                    }
+                    setLogs(logs.concat(logObject));
+                })
+                .catch(error => console.log(error));
         }
         else {
             console.log("Log already exists");
@@ -96,9 +129,9 @@ const App = () => {
     };
 
     // Gets an array of workouts that match the current log_id / date
-    const getWorkouts = (sampleLogs, workouts) => {
-        if (checkExistingLog(sampleLogs, formattedDate)) {
-            let log_id = getLogId(sampleLogs, formattedDate);
+    const getWorkouts = (log, workouts) => {
+        if (checkExistingLog(log, formattedDate)) {
+            let log_id = getLogId(log, formattedDate);
             if (log_id !== undefined) {
                 return workouts.filter(workout => workout.logs_id === log_id);
             }

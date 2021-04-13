@@ -9,14 +9,14 @@ let connection = mysql.createConnection({
     database: 'fitnessTracker'
 })
 
-// Home page
+// "Home page"
 trackerRouter.get('/', async (req, res) => {
     await res.send('This will be the home page');
 })
 
 // HTTP GET request to list all existing exercises
 trackerRouter.get('/exercises', async (req, res) => {
-    let q = 'SELECT exercise_name, categories_id FROM exercises';
+    let q = 'SELECT id, exercise_name AS name, categories_id FROM exercises';
     connection.query(q, (error, result) => {
         if (error) throw error;
         let output = [];
@@ -27,11 +27,24 @@ trackerRouter.get('/exercises', async (req, res) => {
     });
 })
 
+// HTTP GET request to list all existing categories (for exercises)
+trackerRouter.get('/categories', async (req, res) => {
+    let q = 'SELECT id, category_name AS name FROM categories ORDER BY id';
+    connection.query(q, (error, result) => {
+        if (error) throw error;
+        let output = [];
+        result.forEach(category => {
+            output.push(category);
+        })
+        res.send(output);
+    })
+})
+
 // HTTP GET request to list all existing logs
 trackerRouter.get('/logs', async (req, res) => {
     let sql = `SELECT 
                 id, 
-                DATE_FORMAT(created_at, "%W, %c/%e/%Y") AS date 
+                DATE_FORMAT(created_at, "%c/%e/%Y") AS date 
             FROM logs`;
     connection.query(sql, (error, result) => {
         if (error) throw error;
@@ -46,10 +59,36 @@ trackerRouter.get('/logs', async (req, res) => {
     });
 })
 
+// HTTP GET request to list all existing workouts
+trackerRouter.get('/workouts', async (req, res) => {
+    let sql = `SELECT                  
+                workouts.id AS 'workout_id',                  
+                exercises.exercise_name AS 'lift',
+                metrics.wgt AS 'weight',                  
+                metrics.reps AS 'reps',                 
+                workouts.logs_id AS 'logs_id'              
+            FROM workouts              
+            JOIN exercises                  
+                ON workouts.exercise_id = exercises.id              
+            JOIN metrics                  
+                ON workouts.metrics_id = metrics.id
+            ORDER BY workout_id, logs_id;`
+    connection.query(sql, (error, result) => {
+        if (error) throw error;
+        let workoutData = [];
+        result.forEach(workout => {
+            workoutData.push(workout)
+        })
+        res.send(workoutData);
+    });
+})
+
 // HTTP POST request to create a new log
 trackerRouter.post('/logs', async (req, res) => {
-    let sql = 'INSERT INTO logs (created_at) VALUES (NOW())';
-    connection.query(sql, (error, result) => {
+    const newDate = req.body.date;
+
+    let sql = 'INSERT INTO logs (created_at) VALUES (?)';
+    connection.query(sql, [newDate], (error, result) => {
         if (error) res.status(400);
         res.status(201).json({ "id" : result.insertId });
     });
@@ -60,11 +99,11 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
     const log_id = req.params.log_id;
 
     let sql = `SELECT 
-                workouts.logs_id AS 'logs_id',
                 workouts.id AS 'workout_id', 
                 exercises.exercise_name AS 'lift', 
                 metrics.wgt AS 'weight', 
-                metrics.reps AS 'reps' 
+                metrics.reps AS 'reps',
+                workouts.logs_id AS 'logs_id' 
             FROM workouts 
             JOIN exercises 
                 ON workouts.exercise_id = exercises.id 
@@ -123,7 +162,7 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
 
     let workout = {
         'workout_id' : "",
-        'exercise' : req.body.exercise,
+        'exercise' : req.body.lift,
         'weight' : req.body.weight,
         'reps': req.body.reps
     };
@@ -131,7 +170,6 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
     let sql = `INSERT INTO metrics (wgt, reps) VALUES (?, ?)`;
     connection.query(sql, [workout.weight, workout.reps], (error, result) => {
         if (error) throw error;
-        //console.log(result.insertId);
         let metrics_id = result.insertId;
         sql = `INSERT INTO workouts (
                 exercise_id, 
