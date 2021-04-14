@@ -7,8 +7,13 @@ const getLogs = () => {
     return req.then(res => res.data);
 }
 
-const createLog = (newLog) => {
+const createLog = newLog => {
     const req = axios.post(`${baseUrl}/logs`, newLog);
+    return req.then(res => res.data);
+}
+
+const deleteLog = log_id => {
+    const req = axios.delete(`${baseUrl}/logs/${log_id}`);
     return req.then(res => res.data);
 }
 
@@ -31,6 +36,7 @@ const deleteWorkout = (log_id, workout_id) => {
 const logData = {
     getLogs,
     createLog,
+    deleteLog,
     getWorkouts,
     saveWorkout,
     deleteWorkout

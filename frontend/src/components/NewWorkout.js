@@ -14,7 +14,6 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
     const [initialExercises, setInitial ] = useState([]);
     const [exerciseList, setExerciseList ] = useState([]);
     const [selectedExercise, setSelected] = useState('Exercises');
-    // const mountedRef = useRef(false);
     
     // Categories data
     useEffect(() => {

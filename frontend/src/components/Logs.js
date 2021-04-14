@@ -7,6 +7,10 @@ const Logs = ({ handleSave, newWorkout, handleNewWorkout, loggedWorkouts, delete
 
     return (
         <div>
+            <button name='Log' onClick={deleteButton}>
+                Delete Log
+            </button>
+
             <NewWorkout
                 handleSave={handleSave}
                 newWorkout={newWorkout}

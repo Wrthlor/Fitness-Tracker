@@ -47,7 +47,7 @@ const App = () => {
         let workoutObject = {
             ...newWorkout
         };
-
+        if (newWorkout.lift !== 'Exercises')
         logData
             .saveWorkout(getLogId(logs, formattedDate), workoutObject)
             .then(savedWorkout => {
@@ -69,20 +69,38 @@ const App = () => {
     // Deletes selected workout
     const handleDelete = (event) => {
         event.preventDefault();
-        const id = Number(event.target.id);
 
-        const deleteById = (arr, id) => {
-            return arr.filter(workout => workout.workout_id !== id);
+        // Deleting logs - identifier: attribute name = 'Log'
+        if (event.target.name === 'Log') {
+            const message = `Deleting log will remove all existing sets.\nAre you sure you want to delete?`;         
+            if (window.confirm(message)) {
+                const log_id = getLogId(logs, formattedDate);
+                logData
+                    .deleteLog(log_id)
+                    .then(() => {
+                        setLogs(logs.filter(log => log.id !== log_id))
+                        console.log(`Log ${log_id} deleted`);
+                    })
+                    .catch(error => console.log(error));
+            }
         }
-        logData
-            .deleteWorkout(getLogId(logs, formattedDate), id)
-            .then(() => {
-                setWorkouts(
-                    deleteById(workouts, id)
-                );
-                console.log(`Workout id: ${id} deleted`)
-            })
-            .catch(error => console.log(error));
+
+        // Deleting workouts/set - identifier: attribute name = 'Set'
+        if (event.target.name === 'Set') {            
+            const id = Number(event.target.id);
+            const deleteById = (arr, id) => {
+                return arr.filter(workout => workout.workout_id !== id);
+            }
+            logData
+                .deleteWorkout(getLogId(logs, formattedDate), id)
+                .then(() => {
+                    setWorkouts(
+                        deleteById(workouts, id)
+                    );
+                    console.log(`Workout id: ${id} deleted`)
+                })
+                .catch(error => console.log(error));
+        }
     };
     
     // Returns log id

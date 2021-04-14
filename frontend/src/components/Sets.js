@@ -8,7 +8,7 @@ const Sets = ({ workouts, lift, deleteButton }) => {
             {workouts.map(set => {
                 if (set.lift === lift) {
                     return (
-                        <form key={set.workout_id} id={set.workout_id} onSubmit={deleteButton} >
+                        <form key={set.workout_id} id={set.workout_id} name='Set' onSubmit={deleteButton} >
                             <li key={set.workout_id} >
                                 {`${set.weight !== "" ? set.weight : 0} lbs, ${set.reps !== "" ? set.reps : 0} reps`}
                                 {' '}
