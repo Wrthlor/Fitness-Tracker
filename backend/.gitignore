@@ -3,4 +3,5 @@ node_modules
 .env
 
 # SQL materials
+/SQL
 placeholder.sql

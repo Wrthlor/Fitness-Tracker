@@ -79,7 +79,7 @@ const App = () => {
                     .deleteLog(log_id)
                     .then(() => {
                         setLogs(logs.filter(log => log.id !== log_id))
-                        console.log(`Log ${log_id} deleted`);
+                        // console.log(`Log ${log_id} deleted`);
                     })
                     .catch(error => console.log(error));
             }
@@ -97,7 +97,7 @@ const App = () => {
                     setWorkouts(
                         deleteById(workouts, id)
                     );
-                    console.log(`Workout id: ${id} deleted`)
+                    // console.log(`Workout id: ${id} deleted`)
                 })
                 .catch(error => console.log(error));
         }

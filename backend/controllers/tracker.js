@@ -3,10 +3,10 @@ const mysql = require('mysql');
 const trackerRouter = require('express').Router();
 
 let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: process.env.mySQL_Password,
-    database: 'fitnessTracker'
+    host: process.env.clearDB_host,
+    user: process.env.clearDB_user,
+    password: process.env.clearDB_pass,
+    database: process.env.clearDB_database
 })
 
 // "Home page"
