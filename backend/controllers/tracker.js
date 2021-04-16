@@ -1,15 +1,10 @@
-require('dotenv').config();  
 const mysql = require('mysql');
 const trackerRouter = require('express').Router();
+const mySQL_URI = require('../utils/config').mySQL_URI;
 
-let connection = mysql.createConnection({
-    host: process.env.clearDB_host,
-    user: process.env.clearDB_user,
-    password: process.env.clearDB_pass,
-    database: process.env.clearDB_database
-})
+let connection = mysql.createConnection(mySQL_URI);
 
-// "Home page"
+// Temporary "home page"
 trackerRouter.get('/', async (req, res) => {
     await res.send('This will be the home page');
 })
