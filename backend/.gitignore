@@ -1,6 +1,6 @@
 # Main materials
 node_modules
-.env
+/*.env
 
 # SQL materials
 /SQL
