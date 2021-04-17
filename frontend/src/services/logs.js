@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001';
+const baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
 
 // Logs functions 
 const getLogs = () => {
