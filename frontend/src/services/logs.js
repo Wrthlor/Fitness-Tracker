@@ -1,12 +1,6 @@
 import axios from 'axios';
 
-let baseUrl = '';
-if (process.env.NODE_ENV !== 'production') {
-    baseUrl = 'http://localhost:3001'
-}
-else {
-    baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
-}
+let baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
 console.log('Host: ', baseUrl);
 
 // Logs functions 
