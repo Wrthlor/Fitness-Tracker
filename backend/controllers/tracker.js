@@ -5,16 +5,11 @@ const mySQL_URI = require('../utils/config').mySQL_URI;
 
 let connection = mysql.createConnection(mySQL_URI);
 
-// Temporary "home page"
-trackerRouter.get('/', async (req, res) => {
-    await res.send('This will be the home page');
-})
-
 // HTTP GET request to list all existing exercises
-trackerRouter.get('/exercises', async (req, res) => {
+trackerRouter.get('/exercises', async (req, res, next) => {
     let q = 'SELECT id, exercise_name AS name, categories_id FROM exercises';
     connection.query(q, (error, result) => {
-        if (error) throw error;
+        if (error) next(error);
         let output = [];
         result.forEach(exercise => {
             output.push(exercise);
@@ -183,7 +178,6 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
     let workout = {
         'workout_id' : "",
         'exercise' : req.body.lift,
-        // 'category' : req.body.category,
         'weight' : req.body.weight,
         'metric' : req.body.metric,
         'reps': req.body.reps,
@@ -240,7 +234,6 @@ trackerRouter.put('/logs/:log_id/:workout_id', async (req, res) => {
             )`;
     connection.query(sql, [workout.weight, workout.reps, workout_id], (error, result) => {
         if (error) throw error;
-        console.log(result)
         res.status(200).json(workout);
     })
 })

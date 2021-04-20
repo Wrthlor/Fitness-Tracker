@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 let baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
-// if (process.env.NODE_ENV !== 'production')
-//     baseUrl = 'http://localhost:3001';
+if (process.env.NODE_ENV !== 'production')
+    baseUrl = 'http://localhost:3001';
 
 // Logs functions 
 const getLogs = () => {

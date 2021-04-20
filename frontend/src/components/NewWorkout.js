@@ -7,11 +7,11 @@ import exerciseData from '../services/logs';
 
 const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
-    const [show, setShow] = useState({ workout: false, categories: false, exercises: false})
-
     const [categoryList, setCategoryList ] = useState([{ id: 0, name: 'Loading...'}]);
     const [initialExercises, setInitial ] = useState([]);
     const [exerciseList, setExerciseList ] = useState([]);
+
+    const [show, setShow] = useState({ workout: false, categories: false, exercises: false});
     const [selectedWorkout, setSelected] = useState({ category: 'Categories', exercise: 'Exercises' });
     
     // Categories data
@@ -80,20 +80,24 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                     ...show,
                     categories: true,
                     exercises: false
-                })
+                });                
+                setSelected({ category: 'Categories', exercise: 'Exercises' });
                 break;
             default: 
-                if (selectedWorkout !== '' && selectedWorkout !== 'Exercises') {
+                if (selectedWorkout.exercise !== '' && selectedWorkout.exercise !== 'Exercises') {
                     setShow({
                         ...show,
                         workout: false
                     })
-                    setSelected("");
+                    setSelected({ category: 'Categories', exercise: 'Exercises' });
+                }
+                else {
+                    alert("Please select exercise");
                 }
                 break;
         };
     };
-
+    
     return (
         <div>
             <br />

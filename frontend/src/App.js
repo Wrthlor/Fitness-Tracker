@@ -204,6 +204,8 @@ const App = () => {
         return [];
     };
 
+    // console.log(newWorkout)
+
     return (
         <div>
             <DatePicker 
@@ -212,8 +214,7 @@ const App = () => {
                 clearIcon={null} 
                 showLeadingZeros={true} 
             />
-            <br />
-            
+            <br />            
             {checkExistingLog(logs, formattedDate) 
                 ? (
                     <Logs 
