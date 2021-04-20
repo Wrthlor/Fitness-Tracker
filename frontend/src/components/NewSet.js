@@ -1,7 +1,11 @@
 import React from 'react';
 import Dropdown from './Dropdown';
 
-const NewSet = ({ exerciseList, newWorkout, getExercise, handleNewWorkout }) => {
+import WeightReps from './WeightReps';
+import Distance from './Distance';
+import Time from './Time';
+
+const NewSet = ({ exerciseList, getExercise, selectedWorkout, newWorkout, handleNewWorkout }) => {
     
     return (
         <div>
@@ -12,24 +16,21 @@ const NewSet = ({ exerciseList, newWorkout, getExercise, handleNewWorkout }) => 
                 disabled={true}
                 placeholder={'Exercises'}
                 onChange={e => {getExercise(e); handleNewWorkout(e)} } />
-            <input
-                name="weight"
-                type="number"
-                min="0"
-                step="0.25"
-                placeholder="Weight [lbs]"
-                required={true}
-                value={newWorkout.weight}
-                onChange={handleNewWorkout} />
-            <input
-                name="reps"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="Reps"
-                required={true}
-                value={newWorkout.reps}
-                onChange={handleNewWorkout} />
+            
+            {selectedWorkout.category !== 'Cardio' 
+                ? (
+                    <WeightReps
+                        newWorkout={newWorkout}
+                        handleNewWorkout={handleNewWorkout} /> )
+                : (
+                    <div>
+                        <Distance 
+                            newWorkout={newWorkout}
+                            handleNewWorkout={handleNewWorkout} />
+                        <Time 
+                            newWorkout={newWorkout}
+                            handleNewWorkout={handleNewWorkout} />
+                    </div> )}
             <button >
                 Save
             </button>

@@ -12,7 +12,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
     const [categoryList, setCategoryList ] = useState([{ id: 0, name: 'Loading...'}]);
     const [initialExercises, setInitial ] = useState([]);
     const [exerciseList, setExerciseList ] = useState([]);
-    const [selectedExercise, setSelected] = useState('Exercises');
+    const [selectedWorkout, setSelected] = useState({ category: 'Categories', exercise: 'Exercises' });
     
     // Categories data
     useEffect(() => {
@@ -50,19 +50,20 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
         setExerciseList(categorizedExercises);
     };
 
-    // Gets selected exercise from grandchild component: Dropdown
-    const getExercise = (event) => setSelected(event.target.value);
+    // Gets selected category/exercise from grandchild component: Dropdown
+    const getCategory = (event) => setSelected({ ...selectedWorkout, category: event.target.value });
+    const getExercise = (event) => setSelected({ ...selectedWorkout, exercise: event.target.value });
 
     const handleClicks = (event) => {            
         switch (event.target.name) {
-            case 'New':
+            case 'new':
                 setShow({
                     workout: !show.workout,
                     categories: true,
                     exercises: false
                 })
                 break;
-            case 'Category':
+            case 'category':
                 if (categoryList[0].id !== 0) {
                     setShow({
                         ...show,
@@ -74,7 +75,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                     console.log('Loading...')
                 }
                 break;
-            case 'Back':
+            case 'back':
                 setShow({
                     ...show,
                     categories: true,
@@ -82,7 +83,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                 })
                 break;
             default: 
-                if (selectedExercise !== '' && selectedExercise !== 'Exercises') {
+                if (selectedWorkout !== '' && selectedWorkout !== 'Exercises') {
                     setShow({
                         ...show,
                         workout: false
@@ -96,7 +97,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
     return (
         <div>
             <br />
-            <button name='New' onClick={handleClicks}>
+            <button name='new' onClick={handleClicks}>
                 {show.workout ? 'Cancel Workout' : 'New Workout'}
             </button>
 
@@ -107,23 +108,24 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                         {show.categories && 
                             <div onChange={handleClicks}>
                                 <Dropdown 
-                                    name='Category'
+                                    name='category'
                                     list={categoryList}
                                     hidden={true}
                                     disabled={true}
                                     placeholder={'Categories'}
-                                    onChange={handleExerciseList} />
+                                    onChange={e => {getCategory(e); handleNewWorkout(e); handleExerciseList(e)}} />
                             </div>
                         }                        
                         {show.exercises && 
                             <div>
-                                <button name='Back' onClick={handleClicks}>
+                                <button name='back' onClick={handleClicks}>
                                     Go Back
                                 </button>
                                 <NewSet 
                                     exerciseList={exerciseList}
-                                    newWorkout={newWorkout}
                                     getExercise={getExercise}
+                                    selectedWorkout={selectedWorkout}
+                                    newWorkout={newWorkout} 
                                     handleNewWorkout={handleNewWorkout} />
                             </div> 
                         }

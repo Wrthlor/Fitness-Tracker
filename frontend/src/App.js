@@ -7,7 +7,18 @@ import logData from './services/logs';
 
 const App = () => {
     const [workouts, setWorkouts] = useState([]);
-    const [newWorkout, setNewWorkout] = useState({ lift: 'Exercises', weight: '', reps: '' });
+    const [newWorkout, setNewWorkout] = useState({ 
+        lift: 'Exercises', 
+        category: 'Categories',
+        weight: '', 
+        metric: false,
+        reps: '',
+        distance: '',
+        unit: 'Meters',
+        hh: '',
+        mm: '',
+        ss: ''
+    });
     
     const [date, setDate] = useState(new Date());
     const [logs, setLogs ] = useState([]);
@@ -42,28 +53,64 @@ const App = () => {
     // };
 
     // Saves weight/reps when save button pressed
+    // Zeroes out "unnecessary information"
     const handleSave = (event) => {
         event.preventDefault();
         let workoutObject = {
             ...newWorkout
         };
-        if (newWorkout.lift !== 'Exercises')
-        logData
-            .saveWorkout(getLogId(logs, formattedDate), workoutObject)
-            .then(savedWorkout => {
+
+        if (newWorkout.category === 'Cardio') {
+            if (newWorkout.hh === '') {
                 workoutObject = {
-                    workout_id: savedWorkout.workout_id,
-                    ...workoutObject
+                    ...workoutObject,
+                    hh: 0
                 }
-                setWorkouts(workouts.concat(workoutObject));
-                setNewWorkout({
-                    lift: 'Exercises', 
-                    weight: '', 
-                    reps: '',
-                    logs_id: newWorkout.logs_id
+            }
+            workoutObject = {
+                ...workoutObject,
+                weight : 0.0,
+                reps : 0,
+                distance : Number(workoutObject.distance),
+                hh : Number(workoutObject.hh),
+                mm : Number(workoutObject.mm),
+                ss : Number(workoutObject.ss)
+            }
+        }
+        else {
+            workoutObject = {
+                ...workoutObject,
+                distance : 0.0,
+                hh : 0,
+                mm : 0,
+                ss : 0
+            }
+        }
+
+        if (newWorkout.lift !== 'Exercises')
+            logData
+                .saveWorkout(getLogId(logs, formattedDate), workoutObject)
+                .then(savedWorkout => {
+                    workoutObject = {
+                        workout_id: savedWorkout.workout_id,
+                        ...workoutObject
+                    }
+                    setWorkouts(workouts.concat(workoutObject));
+                    setNewWorkout({
+                        lift: 'Exercises', 
+                        category: 'Categories',
+                        weight: '', 
+                        metric: false,
+                        reps: '',
+                        distance: '',
+                        unit: 'Meters',
+                        hh: '',
+                        mm: '',
+                        ss: '',
+                        logs_id: newWorkout.logs_id
+                    })
                 })
-            })
-            .catch(error => console.log(error));
+                .catch(error => console.log(error));
     };
 
     // Deletes selected workout

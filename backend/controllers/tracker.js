@@ -1,4 +1,5 @@
-const mysql = require('mysql');
+// const mysql = require('mysql');
+const mysql = require('mysql2');
 const trackerRouter = require('express').Router();
 const mySQL_URI = require('../utils/config').mySQL_URI;
 
@@ -59,14 +60,23 @@ trackerRouter.get('/workouts', async (req, res) => {
     let sql = `SELECT                  
                 workouts.id AS 'workout_id',                  
                 exercises.exercise_name AS 'lift',
-                metrics.wgt AS 'weight',                  
-                metrics.reps AS 'reps',                 
+                categories.category_name AS 'category',
+                metrics.wgt AS 'weight',
+                metrics.metric AS 'metric',
+                metrics.reps AS 'reps',
+                metrics.distance AS 'distance',
+                metrics.unit AS 'unit',
+                metrics.hour AS 'hh',
+                metrics.minute AS 'mm',
+                metrics.second AS 'ss',
                 workouts.logs_id AS 'logs_id'              
             FROM workouts              
             JOIN exercises                  
                 ON workouts.exercise_id = exercises.id              
             JOIN metrics                  
                 ON workouts.metrics_id = metrics.id
+            JOIN categories
+                ON exercises.categories_id = categories.id
             ORDER BY workout_id, logs_id;`
     connection.query(sql, (error, result) => {
         if (error) throw error;
@@ -96,16 +106,25 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
     let sql = `SELECT 
                 workouts.id AS 'workout_id', 
                 exercises.exercise_name AS 'lift', 
+                categories.category_name AS 'category',
                 metrics.wgt AS 'weight', 
+                metrics.metric AS 'metric',
                 metrics.reps AS 'reps',
+                metrics.distance AS 'distance',
+                metrics.unit AS 'unit',
+                metrics.hour AS 'hh',
+                metrics.minute AS 'mm',
+                metrics.second AS 'ss',
                 workouts.logs_id AS 'logs_id' 
             FROM workouts 
             JOIN exercises 
                 ON workouts.exercise_id = exercises.id 
             JOIN metrics 
                 ON workouts.metrics_id = metrics.id 
+            JOIN categories
+                ON exercises.categories_id = categories.id
             WHERE workouts.logs_id = ? 
-            ORDER BY exercise_name, metrics.created_at`;    
+            ORDER BY metrics.created_at, exercise_name`;
     connection.query(sql, [log_id], (error, result) => {
         if (error) throw error;
         if (result[0] == undefined ) {
@@ -132,7 +151,13 @@ trackerRouter.get('/logs/:log_id/:workout_id', async (req, res) => {
     let sql = `SELECT 
                 exercises.exercise_name AS 'lift', 
                 metrics.wgt AS 'weight', 
-                metrics.reps AS 'reps',                
+                metrics.metric AS 'metric',
+                metrics.reps AS 'reps',
+                metrics.distance AS 'distance',
+                metrics.unit AS 'unit',
+                metrics.hour AS 'hh',
+                metrics.minute AS 'mm',
+                metrics.second AS 'ss',
                 metrics.id AS 'metrics_id'
             FROM workouts 
             JOIN exercises 
@@ -158,12 +183,19 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
     let workout = {
         'workout_id' : "",
         'exercise' : req.body.lift,
+        // 'category' : req.body.category,
         'weight' : req.body.weight,
-        'reps': req.body.reps
+        'metric' : req.body.metric,
+        'reps': req.body.reps,
+        'distance' : req.body.distance,
+        'unit' : req.body.unit,
+        'hour' : req.body.hh,
+        'minute' : req.body.mm,
+        'second' : req.body.ss
     };
 
-    let sql = `INSERT INTO metrics (wgt, reps) VALUES (?, ?)`;
-    connection.query(sql, [workout.weight, workout.reps], (error, result) => {
+    let sql = `INSERT INTO metrics (wgt, reps, distance, unit, hour, minute, second) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(sql, [workout.weight, workout.reps, workout.distance, workout.unit, workout.hour, workout.minute, workout.second], (error, result) => {
         if (error) throw error;
         let metrics_id = result.insertId;
         sql = `INSERT INTO workouts (

@@ -1,11 +1,8 @@
 import axios from 'axios';
-<<<<<<< HEAD
-const baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
-=======
 
 let baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
-console.log('Host: ', baseUrl);
->>>>>>> 976998747e151c7bf4cc6936dd0d6864c73cda55
+if (process.env.NODE_ENV !== 'production')
+    baseUrl = 'http://localhost:3001';
 
 // Logs functions 
 const getLogs = () => {
