@@ -1,5 +1,11 @@
 import axios from 'axios';
+<<<<<<< HEAD
 const baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
+=======
+
+let baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
+console.log('Host: ', baseUrl);
+>>>>>>> 976998747e151c7bf4cc6936dd0d6864c73cda55
 
 // Logs functions 
 const getLogs = () => {
@@ -33,13 +39,26 @@ const deleteWorkout = (log_id, workout_id) => {
     return req.then(res => res.data);
 }
 
+// Exercise functions
+const getExercises = () => {
+    const req = axios.get(`${baseUrl}/exercises`);
+    return req.then(res => res.data);
+}
+
+const getCategories = () => {
+    const req = axios.get(`${baseUrl}/categories`);
+    return req.then(res => res.data);
+}
+
 const logData = {
     getLogs,
     createLog,
     deleteLog,
     getWorkouts,
     saveWorkout,
-    deleteWorkout
+    deleteWorkout,
+    getExercises,
+    getCategories
 }
 
 export default logData;

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-// import sampleData from '../sampleData/data';
 
 import Dropdown from './Dropdown';
 import NewSet from './NewSet';
 
-import exerciseData from '../services/exercises';
+import exerciseData from '../services/logs';
 
 const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
