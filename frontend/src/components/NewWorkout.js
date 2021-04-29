@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Dropdown from './Dropdown';
 import NewSet from './NewSet';
@@ -8,7 +8,7 @@ import exerciseData from '../services/logs';
 
 const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
-    const [categoryList, setCategoryList ] = useState({ id: 0, name: 'Loading...'});
+    const [categoryList, setCategoryList ] = useState([{ id: 0, name: 'Loading...'}]);
     const [initialExercises, setInitial ] = useState([]);
     const [exerciseList, setExerciseList ] = useState([]);
 
@@ -16,7 +16,8 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
     const [selectedWorkout, setSelected ] = useState({ category: 'Categories', exercise: 'Exercises' });
 
     const [message, setMessage ] = useState('');
-    
+    const idRef = useRef();
+
     // Categories data
     useEffect(() => {
         let mounted = true;
@@ -99,15 +100,22 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                 }
                 else {
                     setMessage('Please select an exercise');
-                    setTimeout(() => {
+                    const id = setTimeout(() => {
                         setMessage('');
-                    }, 5000)
+                    }, 5000);
+                    idRef.current = id;     // timeout id saved in ref
                 }
                 break;
         };
     };
-    
-    // console.log(message)
+
+    // Clear timeoutId
+    useEffect(() => {
+        const timeoutId = idRef.current;
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    });
 
     return (
         <div>
