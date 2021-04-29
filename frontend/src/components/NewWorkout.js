@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Dropdown from './Dropdown';
 import NewSet from './NewSet';
+import Notification from './Notification';
 
 import exerciseData from '../services/logs';
 
 const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
-    const [show, setShow] = useState({ workout: false, categories: false, exercises: false})
-
-    const [categoryList, setCategoryList ] = useState([{ id: 0, name: 'Loading...'}]);
+    const [categoryList, setCategoryList ] = useState({ id: 0, name: 'Loading...'});
     const [initialExercises, setInitial ] = useState([]);
     const [exerciseList, setExerciseList ] = useState([]);
-    const [selectedWorkout, setSelected] = useState({ category: 'Categories', exercise: 'Exercises' });
+
+    const [show, setShow ] = useState({ workout: false, categories: false, exercises: false});
+    const [selectedWorkout, setSelected ] = useState({ category: 'Categories', exercise: 'Exercises' });
+
+    const [message, setMessage ] = useState('');
     
     // Categories data
     useEffect(() => {
@@ -54,7 +57,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
     const getCategory = (event) => setSelected({ ...selectedWorkout, category: event.target.value });
     const getExercise = (event) => setSelected({ ...selectedWorkout, exercise: event.target.value });
 
-    const handleClicks = (event) => {            
+    const handleClicks = (event) => { 
         switch (event.target.name) {
             case 'new':
                 setShow({
@@ -62,6 +65,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                     categories: true,
                     exercises: false
                 })
+                setMessage("");
                 break;
             case 'category':
                 if (categoryList[0].id !== 0) {
@@ -80,19 +84,30 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                     ...show,
                     categories: true,
                     exercises: false
-                })
+                });                
+                setSelected({ category: 'Categories', exercise: 'Exercises' });
+                setMessage('');
                 break;
             default: 
-                if (selectedWorkout !== '' && selectedWorkout !== 'Exercises') {
+                if (selectedWorkout.exercise !== 'Exercises') {
                     setShow({
                         ...show,
                         workout: false
                     })
-                    setSelected("");
+                    setSelected({ category: 'Categories', exercise: 'Exercises' });
+                    setMessage('');
+                }
+                else {
+                    setMessage('Please select an exercise');
+                    setTimeout(() => {
+                        setMessage('');
+                    }, 5000)
                 }
                 break;
         };
     };
+    
+    // console.log(message)
 
     return (
         <div>
@@ -103,7 +118,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
             {show.workout &&  
                 <div onSubmit={handleClicks}> 
-                    <form name='test' onSubmit={handleSave}>
+                    <form onSubmit={handleSave}>
                         <br />
                         {show.categories && 
                             <div onChange={handleClicks}>
@@ -115,12 +130,18 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                                     placeholder={'Categories'}
                                     onChange={e => {getCategory(e); handleNewWorkout(e); handleExerciseList(e)}} />
                             </div>
-                        }                        
+                        }
+                                 
                         {show.exercises && 
                             <div>
                                 <button name='back' onClick={handleClicks}>
                                     Go Back
                                 </button>
+                                {message !== "" && 
+                                    <Notification 
+                                        message={message}
+                                        className='warning' /> 
+                                }
                                 <NewSet 
                                     exerciseList={exerciseList}
                                     getExercise={getExercise}

@@ -20,9 +20,10 @@ const Distance = ({ newWorkout, handleNewWorkout }) => {
     ];
 
     return (
-        <div>
+        <div className='distance'>
             <input
                 name="distance"
+                className='distance-input'
                 type="number"
                 min="0"
                 step="0.01"
@@ -32,6 +33,7 @@ const Distance = ({ newWorkout, handleNewWorkout }) => {
                 onChange={handleNewWorkout} />
             <Dropdown 
                 name='unit'
+                className='distance-units'
                 list={distanceUnit}
                 placeholder={'Meters'} 
                 onChange={handleNewWorkout} />

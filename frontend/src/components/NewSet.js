@@ -5,10 +5,16 @@ import WeightReps from './WeightReps';
 import Distance from './Distance';
 import Time from './Time';
 
-const NewSet = ({ exerciseList, getExercise, selectedWorkout, newWorkout, handleNewWorkout }) => {
+const NewSet = ({ 
+    exerciseList, 
+    getExercise, 
+    selectedWorkout, 
+    newWorkout, 
+    handleNewWorkout 
+}) => {
     
     return (
-        <div>
+        <div className='new-set'>
             <Dropdown
                 name='lift'
                 list={exerciseList}
@@ -23,7 +29,7 @@ const NewSet = ({ exerciseList, getExercise, selectedWorkout, newWorkout, handle
                         newWorkout={newWorkout}
                         handleNewWorkout={handleNewWorkout} /> )
                 : (
-                    <div>
+                    <div className='distance-time'>
                         <Distance 
                             newWorkout={newWorkout}
                             handleNewWorkout={handleNewWorkout} />

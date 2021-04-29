@@ -2,6 +2,7 @@ import React from 'react';
 
 /*
     name - Default value = "" - name attribute for element
+    className - Default vale = "" - class name(s) added to main <div> element
     hidden - Default value = false - specifies placehodler option should be hidden
     disabled - Default value = false - specifies placeholder option should be disabled
     list - Default value = [] - array of options, must have id and name
@@ -10,6 +11,7 @@ import React from 'react';
 */
 const Dropdown = ({ 
     name = "", 
+    className = "",
     hidden = false, 
     disabled = false, 
     list = [],  
@@ -18,7 +20,7 @@ const Dropdown = ({
 }) => {
 
     return (
-        <div>
+        <div className={className}>
             <select name={name} defaultValue={placeholder} onChange={onChange }>
                 <option hidden={hidden} disabled={disabled} value={placeholder} >
                     {placeholder}
