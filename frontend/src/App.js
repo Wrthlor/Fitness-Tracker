@@ -87,7 +87,7 @@ const App = () => {
             }
         }
 
-        if (newWorkout.lift !== 'Exercises')
+        if (newWorkout.lift !== 'Exercises' )
             logData
                 .saveWorkout(getLogId(logs, formattedDate), workoutObject)
                 .then(savedWorkout => {
@@ -119,14 +119,12 @@ const App = () => {
 
         // Deleting logs - identifier: attribute name = 'Log'
         if (event.target.name === 'Log') {
-            const message = `Deleting log will remove all existing sets.\nAre you sure you want to delete?`;         
-            if (window.confirm(message)) {
+            if (event.target.value === 'yes') {
                 const log_id = getLogId(logs, formattedDate);
                 logData
                     .deleteLog(log_id)
                     .then(() => {
-                        setLogs(logs.filter(log => log.id !== log_id))
-                        // console.log(`Log ${log_id} deleted`);
+                        setLogs(logs.filter(log => log.id !== log_id));
                     })
                     .catch(error => console.log(error));
             }
@@ -144,7 +142,6 @@ const App = () => {
                     setWorkouts(
                         deleteById(workouts, id)
                     );
-                    // console.log(`Workout id: ${id} deleted`)
                 })
                 .catch(error => console.log(error));
         }
@@ -186,11 +183,31 @@ const App = () => {
 
     // Creates new workout 
     const handleNewWorkout = (event) => {
-        setNewWorkout({
-            ...newWorkout,
-            logs_id: getLogId(logs, formattedDate),
-            [event.target.name]: event.target.value,
-        });
+        event.preventDefault();
+
+        // Changing categories reset exercise and metrics
+        if (event.target.name === 'category') {
+            setNewWorkout({
+                lift: 'Exercises', 
+                [event.target.name]: event.target.value,
+                weight: '', 
+                metric: false,
+                reps: '',
+                distance: '',
+                unit: 'Meters',
+                hh: '',
+                mm: '',
+                ss: '',                
+                logs_id: getLogId(logs, formattedDate)
+            })
+        }
+        else {
+            setNewWorkout({
+                ...newWorkout,
+                logs_id: getLogId(logs, formattedDate),
+                [event.target.name]: event.target.value,
+            });
+        }
     };
 
     // Gets an array of workouts that match the current log_id / date
@@ -204,11 +221,11 @@ const App = () => {
         return [];
     };
 
-    // console.log(newWorkout)
-
     return (
-        <div>
+        <div className='center'>
             <DatePicker 
+                className='date-picker'
+                calendarClassName='calendar-date-picker'
                 onChange={setDate}
                 value={date} 
                 clearIcon={null} 

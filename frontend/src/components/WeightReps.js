@@ -3,7 +3,7 @@ import React from 'react';
 const WeightReps = ({ newWorkout, handleNewWorkout }) => {
 
     return (
-        <div>
+        <div className='weight-reps'>
             <input
                 name="weight"
                 type="number"

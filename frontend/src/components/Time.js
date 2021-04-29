@@ -3,8 +3,9 @@ import React from 'react';
 const Time = ({ newWorkout, handleNewWorkout }) => {
 
     return (
-        <div>
+        <div className='time'>
             <input
+                className='hours'
                 name="hh"
                 type="number"
                 min="0"
@@ -14,6 +15,7 @@ const Time = ({ newWorkout, handleNewWorkout }) => {
                 value={newWorkout.hh}
                 onChange={handleNewWorkout} />
             <input
+                className='minutes'
                 name="mm"
                 type="number"
                 min="0"
@@ -24,6 +26,7 @@ const Time = ({ newWorkout, handleNewWorkout }) => {
                 value={newWorkout.mm}
                 onChange={handleNewWorkout} />
             <input
+                className='seconds'
                 name="ss"
                 type="number"
                 min="0"
