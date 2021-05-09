@@ -10,7 +10,7 @@ const WeightReps = ({ newWorkout, handleNewWorkout }) => {
                 min="0"
                 step="0.25"
                 placeholder="Weight [lbs]"
-                required={true}
+                // required={true}
                 value={newWorkout.weight}
                 onChange={handleNewWorkout} />
             <input
@@ -19,7 +19,7 @@ const WeightReps = ({ newWorkout, handleNewWorkout }) => {
                 min="0"
                 step="1"
                 placeholder="Reps"
-                required={true}
+                // required={true}
                 value={newWorkout.reps}
                 onChange={handleNewWorkout} />
         </div>

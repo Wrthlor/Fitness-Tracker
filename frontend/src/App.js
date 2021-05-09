@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import DatePicker from 'react-date-picker';
 import Logs from './components/Logs';
+import LogButton from './components/LogButton'
 
 import logData from './services/logs';
 
@@ -23,9 +24,14 @@ const App = () => {
     const [date, setDate] = useState(new Date());
     const [logs, setLogs ] = useState([]);
 
+    const [deleteStatus, setDeleteStatus] = useState(false);
+    
     // Formats date
     let formattedDate = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
     let mySQL_date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+
+    // Check if there's an existing log for date
+    const checkExistingLog = (logs, date) => logs.map(log => log.date === date).includes(true);
 
     // Logs data
     useEffect(() => {
@@ -87,7 +93,7 @@ const App = () => {
             }
         }
 
-        if (newWorkout.lift !== 'Exercises' )
+        if (newWorkout.lift !== 'Exercises' && validNewWorkout === true)
             logData
                 .saveWorkout(getLogId(logs, formattedDate), workoutObject)
                 .then(savedWorkout => {
@@ -113,40 +119,6 @@ const App = () => {
                 .catch(error => console.log(error));
     };
 
-    // Deletes selected workout
-    const handleDelete = (event) => {
-        event.preventDefault();
-
-        // Deleting logs - identifier: attribute name = 'Log'
-        if (event.target.name === 'Log') {
-            if (event.target.value === 'yes') {
-                const log_id = getLogId(logs, formattedDate);
-                logData
-                    .deleteLog(log_id)
-                    .then(() => {
-                        setLogs(logs.filter(log => log.id !== log_id));
-                    })
-                    .catch(error => console.log(error));
-            }
-        }
-
-        // Deleting workouts/set - identifier: attribute name = 'Set'
-        if (event.target.name === 'Set') {            
-            const id = Number(event.target.id);
-            const deleteById = (arr, id) => {
-                return arr.filter(workout => workout.workout_id !== id);
-            }
-            logData
-                .deleteWorkout(getLogId(logs, formattedDate), id)
-                .then(() => {
-                    setWorkouts(
-                        deleteById(workouts, id)
-                    );
-                })
-                .catch(error => console.log(error));
-        }
-    };
-    
     // Returns log id
     const getLogId = (logs, date) => {
         const log = logs.find(log => log.date === date);
@@ -155,31 +127,84 @@ const App = () => {
         return "";
     };
 
-    // Check if there's an existing log for date
-    const checkExistingLog = (logs, date) => logs.map(log => log.date === date).includes(true);
+    // Manages button click events
+    const handleClick = (event) => {
+        event.preventDefault();
 
-    // Creates new log if existing log does not exist
-    const handleNewLog = () => {
-        if (!checkExistingLog(logs, formattedDate)) {     
-            let logObject = {
-                date: mySQL_date
-            }
-            
-            logData
-                .createLog(logObject)
-                .then(newLog => {
-                    logObject = {
-                        id: newLog.id,
-                        date: formattedDate
+        // console.log(event.target.name);
+        switch (event.target.name) {
+            case 'createLog':
+                if (!checkExistingLog(logs, formattedDate)) {     
+                    let logObject = {
+                        date: mySQL_date
                     }
-                    setLogs(logs.concat(logObject));
-                })
-                .catch(error => console.log(error));
+                    
+                    logData
+                        .createLog(logObject)
+                        .then(newLog => {
+                            logObject = {
+                                id: newLog.id,
+                                date: formattedDate
+                            }
+                            setLogs(logs.concat(logObject));
+                        })
+                        .catch(error => console.log(error));
+                }
+                else {
+                    console.log("Log already exists");
+                }
+                break;
+
+            // Triggers confirmation response
+            case 'deleteLog': 
+                setDeleteStatus(true);
+                break;
+
+            // Deletes log depending on confirmation response
+            case 'confirmDelete':
+                if (event.target.value === 'yes') {
+                    const log_id = getLogId(logs, formattedDate);
+                    logData
+                        .deleteLog(log_id)
+                        .then(() => {
+                            setLogs(logs.filter(log => log.id !== log_id));
+                        })
+                        .catch(error => console.log(error));
+                }
+                setDeleteStatus(false);
+                break;
+
+            // Deletes individual set
+            case 'deleteSet':
+                const id = Number(event.target.id);
+                const deleteById = (arr, id) => {
+                    return arr.filter(workout => workout.workout_id !== id);
+                }
+                logData
+                    .deleteWorkout(getLogId(logs, formattedDate), id)
+                    .then(() => {
+                        setWorkouts(
+                            deleteById(workouts, id)
+                        );
+                    })
+                    .catch(error => console.log(error));
+                break;
+
+            default:
+                // Do nothing
+                break;
         }
-        else {
-            console.log("Log already exists");
-        }
-    };
+    }
+
+    const validNewWorkout = () => {
+        if (newWorkout.category === 'Cardio')
+            if (newWorkout.distance !== '' && newWorkout.mm !== '' && newWorkout.ss !== '')
+                return true;
+        if (newWorkout.category !== 'Cardio') 
+            if (newWorkout.weight !== '' && newWorkout.reps !== '')
+                return true;
+        return false;
+    }
 
     // Creates new workout 
     const handleNewWorkout = (event) => {
@@ -221,6 +246,8 @@ const App = () => {
         return [];
     };
 
+    console.log(validNewWorkout())
+
     return (
         <div className='center'>
             <DatePicker 
@@ -231,19 +258,20 @@ const App = () => {
                 clearIcon={null} 
                 showLeadingZeros={true} 
             />
-            <br />            
-            {checkExistingLog(logs, formattedDate) 
-                ? (
-                    <Logs 
+
+            <LogButton 
+                handleClick={handleClick}
+                logStatus={checkExistingLog(logs, formattedDate)}
+                deleteStatus={deleteStatus} />
+
+            {checkExistingLog(logs, formattedDate)
+                &&
+                    <Logs  
                         handleSave={handleSave}
                         newWorkout={newWorkout}
                         handleNewWorkout={handleNewWorkout}
                         loggedWorkouts={getWorkouts(logs, workouts)}
-                        deleteButton={handleDelete} /> ) 
-                : (
-                    <button onClick={handleNewLog}>
-                        Create Workout Log
-                    </button> )
+                        deleteButton={handleClick} /> 
             }
         </div>
     );

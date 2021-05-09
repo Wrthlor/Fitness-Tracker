@@ -28,7 +28,7 @@ const Distance = ({ newWorkout, handleNewWorkout }) => {
                 min="0"
                 step="0.01"
                 placeholder="Distance"
-                required={true}
+                // required={true}
                 value={newWorkout.distance}
                 onChange={handleNewWorkout} />
             <Dropdown 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Notification from './Notification';
 
-const DeleteLog = ({ deleteButton, handleClick }) => {
+const DeleteLog = ({ handleClick }) => {
 
     const message = "Deleting log will remove all existing sets.\nAre you sure you want to delete?"; 
     
@@ -12,11 +12,11 @@ const DeleteLog = ({ deleteButton, handleClick }) => {
                 message={message}
                 className='warning' /> 
             
-            <button name='Log' value='yes' onClick={e => {deleteButton(e); handleClick(e) }}>
+            <button name='confirmDelete' value='yes' onClick={handleClick}>
                 Yes
             </button>
             
-            <button name='Log' value='no' onClick={e => {deleteButton(e); handleClick(e) }}>
+            <button name='confirmDelete' value='no' onClick={handleClick}>
                 No
             </button>
         </div>

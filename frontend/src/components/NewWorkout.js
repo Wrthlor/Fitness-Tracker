@@ -99,12 +99,54 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                     setMessage('');
                 }
                 else {
-                    setMessage('Please select an exercise');
-                    const id = setTimeout(() => {
-                        setMessage('');
-                    }, 5000);
-                    idRef.current = id;     // timeout id saved in ref
+                    if (selectedWorkout.exercise === 'Exercises') {                        
+                        setMessage('Please select an exercise');
+                        const id = setTimeout(() => {
+                            setMessage('');
+                        }, 5000);
+                        idRef.current = id;     // timeout id saved in ref
+                    }
+                    else if (selectedWorkout.category === 'Cardio') {
+                        if (newWorkout.distance === '') {
+                            setMessage('Please enter a value for distance');
+                            const id = setTimeout(() => {
+                                setMessage('');
+                            }, 5000);
+                            idRef.current = id;
+                        }
+                        else if (newWorkout.mm === '') {
+                            setMessage('Please enter a value for minutes');
+                            const id = setTimeout(() => {
+                                setMessage('');
+                            }, 5000);
+                            idRef.current = id;
+                        }
+                        else if (newWorkout.ss === '') {
+                            setMessage('Please enter a value for seconds');
+                            const id = setTimeout(() => {
+                                setMessage('');
+                            }, 5000);
+                            idRef.current = id;
+                        }
+                    }
+                    else {
+                        if (newWorkout.weight === '') {
+                            setMessage('Please enter a value for weight');
+                            const id = setTimeout(() => {
+                                setMessage('');
+                            }, 5000);
+                            idRef.current = id;
+                        }
+                        else if (newWorkout.reps === '') {
+                            setMessage('Please enter a value for reps');
+                            const id = setTimeout(() => {
+                                setMessage('');
+                            }, 5000);
+                            idRef.current = id;
+                        }
+                    }
                 }
+
                 break;
         };
     };
@@ -116,6 +158,8 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
             clearTimeout(timeoutId);
         };
     });
+
+    console.log(newWorkout)
 
     return (
         <div>

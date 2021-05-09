@@ -28,7 +28,7 @@ const Sets = ({ workouts, lift, deleteButton }) => {
             {workouts.map(set => {
                 if (set.lift === lift) {
                     return (
-                        <form key={set.workout_id} id={set.workout_id} name='Set' onSubmit={deleteButton} >
+                        <form key={set.workout_id} id={set.workout_id} name='deleteSet' onSubmit={deleteButton} >
                             <li key={set.workout_id} >
                                 {set.category !== 'Cardio' 
                                     ? `${Number(set.weight)} lbs, ${set.reps} reps` 

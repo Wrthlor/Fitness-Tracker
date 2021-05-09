@@ -22,7 +22,7 @@ const Time = ({ newWorkout, handleNewWorkout }) => {
                 max="59"
                 step="1"
                 placeholder="mm"
-                required={true}
+                // required={true}
                 value={newWorkout.mm}
                 onChange={handleNewWorkout} />
             <input
@@ -33,7 +33,7 @@ const Time = ({ newWorkout, handleNewWorkout }) => {
                 max="59"
                 step="1"
                 placeholder="ss"
-                required={true}
+                // required={true}
                 value={newWorkout.ss}
                 onChange={handleNewWorkout} />
         </div>
