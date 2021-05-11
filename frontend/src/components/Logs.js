@@ -8,7 +8,8 @@ const Logs = ({
     newWorkout, 
     handleNewWorkout, 
     loggedWorkouts, 
-    deleteButton 
+    deleteButton,
+    validSubmission
 }) => {
 
     return (
@@ -16,7 +17,8 @@ const Logs = ({
             <NewWorkout
                 handleSave={handleSave}
                 newWorkout={newWorkout}
-                handleNewWorkout={handleNewWorkout} />
+                handleNewWorkout={handleNewWorkout}
+                validSubmission={validSubmission} />
 
             <ExistingWorkouts 
                 loggedWorkouts={loggedWorkouts} 

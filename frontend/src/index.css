@@ -1,0 +1,122 @@
+h4 {
+    color: blue;
+    font-style: italic;
+}
+
+li {
+    color: black;
+    padding-top: 3px;
+    font-size: 15px;
+}
+
+button {
+    max-width: 5rem;
+    max-height: 5rem;
+}
+
+.warning {
+    color: rgb(236, 92, 34);
+    font-size: 1.25rem;
+    border-style: solid;
+    border-width: 0.1875rem;
+    padding: 0.1875rem;
+}
+
+.center {    
+    background-color: rgb(238, 238, 238);
+    margin: 0 auto;
+    max-width: 500px;
+    border-color: rgb(25, 117, 255);
+    border-style: solid;
+    border-width: 0.1875rem;
+    padding: 0.9375rem;
+}
+
+.date-picker {
+    position: relative;
+    margin: 0 auto;
+}
+
+.create-button {
+    position: relative;
+    left: 50px;
+}
+
+.logs {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+.delete-log {
+    max-width: 6.25rem;
+}
+
+.new-set {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.weight-reps {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 1.5rem;
+}
+
+.distance-time {
+    position: relative;
+}
+
+.distance {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 1.5rem;
+}
+
+.distance-input {
+    max-width: 9.375rem;
+    float: left;
+    position: relative;
+}
+
+.distance-units {
+    position: relative;
+}
+
+.time {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: relative;
+    height: 1.5rem;
+}
+
+.hours {
+    order: 1;
+    max-width: 2rem;
+}
+
+.minutes {
+    order: 2;
+    max-width: 2rem;
+}
+
+.seconds {
+    order: 3;
+    max-width: 2rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}

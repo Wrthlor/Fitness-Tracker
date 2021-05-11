@@ -4,9 +4,9 @@ import Dropdown from './Dropdown';
 import NewSet from './NewSet';
 import Notification from './Notification';
 
-import exerciseData from '../services/logs';
+import exerciseData from '../services/logsService';
 
-const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
+const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout, validSubmission }) => {
 
     const [categoryList, setCategoryList ] = useState([{ id: 0, name: 'Loading...'}]);
     const [initialExercises, setInitial ] = useState([]);
@@ -60,7 +60,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
 
     const handleClicks = (event) => { 
         switch (event.target.name) {
-            case 'new':
+            case 'new-cancel':
                 setShow({
                     workout: !show.workout,
                     categories: true,
@@ -91,62 +91,45 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                 break;
             default: 
                 if (selectedWorkout.exercise !== 'Exercises') {
-                    setShow({
-                        ...show,
-                        workout: false
-                    })
-                    setSelected({ category: 'Categories', exercise: 'Exercises' });
-                    setMessage('');
+                    // Selected cardio exercise
+                    if (selectedWorkout.category === 'Cardio') {
+                        if (newWorkout.distance === '') 
+                            setMessage('Please enter a value for distance');
+                        else if (newWorkout.mm === '') 
+                            setMessage('Please enter a value for minutes');
+                        else if (newWorkout.ss === '') 
+                            setMessage('Please enter a value for seconds');
+                    }
+                    // Selected non-cardio exercise
+                    else {
+                        if (newWorkout.weight === '') 
+                            setMessage('Please enter a value for weight');
+                        else if (newWorkout.reps === '') 
+                            setMessage('Please enter a value for reps');
+                    }
+                    const id = setTimeout(() => {
+                        setMessage('');
+                    }, 5000);
+                    idRef.current = id;
+
+                    if (validSubmission()) {
+                        setShow({
+                            ...show,
+                            workout: false
+                        })
+                        setSelected({ category: 'Categories', exercise: 'Exercises' });
+                        setMessage('');
+                    }
                 }
                 else {
-                    if (selectedWorkout.exercise === 'Exercises') {                        
+                    if (selectedWorkout.exercise === 'Exercises') {  
                         setMessage('Please select an exercise');
                         const id = setTimeout(() => {
                             setMessage('');
                         }, 5000);
                         idRef.current = id;     // timeout id saved in ref
                     }
-                    else if (selectedWorkout.category === 'Cardio') {
-                        if (newWorkout.distance === '') {
-                            setMessage('Please enter a value for distance');
-                            const id = setTimeout(() => {
-                                setMessage('');
-                            }, 5000);
-                            idRef.current = id;
-                        }
-                        else if (newWorkout.mm === '') {
-                            setMessage('Please enter a value for minutes');
-                            const id = setTimeout(() => {
-                                setMessage('');
-                            }, 5000);
-                            idRef.current = id;
-                        }
-                        else if (newWorkout.ss === '') {
-                            setMessage('Please enter a value for seconds');
-                            const id = setTimeout(() => {
-                                setMessage('');
-                            }, 5000);
-                            idRef.current = id;
-                        }
-                    }
-                    else {
-                        if (newWorkout.weight === '') {
-                            setMessage('Please enter a value for weight');
-                            const id = setTimeout(() => {
-                                setMessage('');
-                            }, 5000);
-                            idRef.current = id;
-                        }
-                        else if (newWorkout.reps === '') {
-                            setMessage('Please enter a value for reps');
-                            const id = setTimeout(() => {
-                                setMessage('');
-                            }, 5000);
-                            idRef.current = id;
-                        }
-                    }
                 }
-
                 break;
         };
     };
@@ -159,18 +142,16 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
         };
     });
 
-    console.log(newWorkout)
-
     return (
         <div>
             <br />
-            <button name='new' onClick={handleClicks}>
+            <button name='new-cancel' onClick={handleClicks}>
                 {show.workout ? 'Cancel Workout' : 'New Workout'}
             </button>
 
             {show.workout &&  
-                <div onSubmit={handleClicks}> 
-                    <form onSubmit={handleSave}>
+                <div onSubmit={handleClicks}>
+                    <form onSubmit={handleSave}> 
                         <br />
                         {show.categories && 
                             <div onChange={handleClicks}>
@@ -189,11 +170,13 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout }) => {
                                 <button name='back' onClick={handleClicks}>
                                     Go Back
                                 </button>
+
                                 {message !== "" && 
                                     <Notification 
                                         message={message}
                                         className='warning' /> 
                                 }
+
                                 <NewSet 
                                     exerciseList={exerciseList}
                                     getExercise={getExercise}

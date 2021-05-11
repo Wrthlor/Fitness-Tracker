@@ -47,7 +47,7 @@ const getCategories = () => {
     return req.then(res => res.data);
 }
 
-const logData = {
+const logsService = {
     getLogs,
     createLog,
     deleteLog,
@@ -58,4 +58,4 @@ const logData = {
     getCategories
 }
 
-export default logData;
+export default logsService;

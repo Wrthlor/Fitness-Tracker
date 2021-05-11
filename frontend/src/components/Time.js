@@ -19,10 +19,9 @@ const Time = ({ newWorkout, handleNewWorkout }) => {
                 name="mm"
                 type="number"
                 min="0"
-                max="59"
+                max="59" 
                 step="1"
                 placeholder="mm"
-                // required={true}
                 value={newWorkout.mm}
                 onChange={handleNewWorkout} />
             <input
@@ -33,7 +32,6 @@ const Time = ({ newWorkout, handleNewWorkout }) => {
                 max="59"
                 step="1"
                 placeholder="ss"
-                // required={true}
                 value={newWorkout.ss}
                 onChange={handleNewWorkout} />
         </div>

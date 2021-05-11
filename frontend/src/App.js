@@ -4,11 +4,11 @@ import DatePicker from 'react-date-picker';
 import Logs from './components/Logs';
 import LogButton from './components/LogButton'
 
-import logData from './services/logs';
+import logData from './services/logsService';
 
 const App = () => {
-    const [workouts, setWorkouts] = useState([]);
-    const [newWorkout, setNewWorkout] = useState({ 
+    const [workouts, setWorkouts ] = useState([]);
+    const [newWorkout, setNewWorkout ] = useState({ 
         lift: 'Exercises', 
         category: 'Categories',
         weight: '', 
@@ -21,10 +21,10 @@ const App = () => {
         ss: ''
     });
     
-    const [date, setDate] = useState(new Date());
+    const [date, setDate ] = useState(new Date());
     const [logs, setLogs ] = useState([]);
 
-    const [deleteStatus, setDeleteStatus] = useState(false);
+    const [deleteStatus, setDeleteStatus ] = useState(false);
     
     // Formats date
     let formattedDate = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
@@ -58,10 +58,28 @@ const App = () => {
     //         return rng;
     // };
 
+    const validNewWorkout = () => {
+        if (newWorkout.lift !== 'Exercises') {
+            if (newWorkout.category === 'Cardio')
+                if (newWorkout.distance !== '' && newWorkout.mm !== '' && newWorkout.ss !== '')
+                    if (newWorkout.distance >= 0 && 
+                        newWorkout.mm >= 0 && newWorkout.mm <= 59 && 
+                        newWorkout.ss >= 0 && newWorkout.ss <= 59) 
+                        return true;
+                        
+            if (newWorkout.category !== 'Cardio') 
+                if (newWorkout.weight !== '' && newWorkout.reps !== '')
+                    if (newWorkout.weight >= 0 && newWorkout.reps >= 0 )
+                        return true;
+        }
+        return false;
+    }
+
     // Saves weight/reps when save button pressed
     // Zeroes out "unnecessary information"
     const handleSave = (event) => {
         event.preventDefault();
+
         let workoutObject = {
             ...newWorkout
         };
@@ -92,8 +110,8 @@ const App = () => {
                 ss : 0
             }
         }
-
-        if (newWorkout.lift !== 'Exercises' && validNewWorkout === true)
+        
+        if (validNewWorkout() === true) {
             logData
                 .saveWorkout(getLogId(logs, formattedDate), workoutObject)
                 .then(savedWorkout => {
@@ -117,6 +135,7 @@ const App = () => {
                     })
                 })
                 .catch(error => console.log(error));
+        }
     };
 
     // Returns log id
@@ -196,15 +215,8 @@ const App = () => {
         }
     }
 
-    const validNewWorkout = () => {
-        if (newWorkout.category === 'Cardio')
-            if (newWorkout.distance !== '' && newWorkout.mm !== '' && newWorkout.ss !== '')
-                return true;
-        if (newWorkout.category !== 'Cardio') 
-            if (newWorkout.weight !== '' && newWorkout.reps !== '')
-                return true;
-        return false;
-    }
+    const cardioUnits = ['distance', 'hh', 'mm', 'ss'];
+    const nonCardioUnits = ['weight', 'reps'];
 
     // Creates new workout 
     const handleNewWorkout = (event) => {
@@ -227,11 +239,51 @@ const App = () => {
             })
         }
         else {
-            setNewWorkout({
-                ...newWorkout,
-                logs_id: getLogId(logs, formattedDate),
-                [event.target.name]: event.target.value,
-            });
+            if (nonCardioUnits.includes(event.target.name)) {
+                if (event.target.value >= 0) {
+                    setNewWorkout({
+                        ...newWorkout,
+                        logs_id: getLogId(logs, formattedDate),
+                        [event.target.name]: event.target.value,
+                    });
+                }
+            }
+            else if (cardioUnits.includes(event.target.name)) {
+                if (event.target.name === 'mm' || event.target.name === 'ss') {
+                    if (event.target.value >= 0  && event.target.value <= 59) {
+                        setNewWorkout({
+                            ...newWorkout,
+                            logs_id: getLogId(logs, formattedDate),
+                            [event.target.name]: event.target.value,
+                        });
+                    } 
+                }
+                else if (event.target.name === 'hh') {
+                    if (event.target.value >= 0 && event.target.value <= 99) {
+                        setNewWorkout({
+                            ...newWorkout,
+                            logs_id: getLogId(logs, formattedDate),
+                            [event.target.name]: event.target.value,
+                        });
+                    }
+                }
+                else {
+                    if (event.target.value >= 0) {
+                        setNewWorkout({
+                            ...newWorkout,
+                            logs_id: getLogId(logs, formattedDate),
+                            [event.target.name]: event.target.value,
+                        });
+                    }
+                }
+            }
+            else {
+                setNewWorkout({
+                    ...newWorkout,
+                    logs_id: getLogId(logs, formattedDate),
+                    [event.target.name]: event.target.value,
+                });
+            }
         }
     };
 
@@ -245,8 +297,6 @@ const App = () => {
         }
         return [];
     };
-
-    console.log(validNewWorkout())
 
     return (
         <div className='center'>
@@ -264,14 +314,16 @@ const App = () => {
                 logStatus={checkExistingLog(logs, formattedDate)}
                 deleteStatus={deleteStatus} />
 
-            {checkExistingLog(logs, formattedDate)
-                &&
+            {!deleteStatus 
+                && checkExistingLog(logs, formattedDate)
+                && (
                     <Logs  
                         handleSave={handleSave}
                         newWorkout={newWorkout}
                         handleNewWorkout={handleNewWorkout}
                         loggedWorkouts={getWorkouts(logs, workouts)}
-                        deleteButton={handleClick} /> 
+                        deleteButton={handleClick}
+                        validSubmission={validNewWorkout} /> )
             }
         </div>
     );
