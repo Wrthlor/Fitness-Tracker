@@ -41,7 +41,9 @@ li {
 }
 
 .create-delete-button {
-    width: 4rem;
+    width: 5rem;
+    text-align: center;
+    margin: auto;
 }
 
 #new-set {
@@ -104,7 +106,7 @@ li {
 
 #save-button {
     order: 3;
-    width: 3rem;
+    width: 4rem;
 }
 
 input::-webkit-outer-spin-button,
