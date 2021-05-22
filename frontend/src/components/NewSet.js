@@ -14,7 +14,7 @@ const NewSet = ({
 }) => {
     
     return (
-        <div className='new-set'>
+        <div id='new-set'>
             <Dropdown
                 name='lift'
                 list={exerciseList}
@@ -29,7 +29,7 @@ const NewSet = ({
                         newWorkout={newWorkout}
                         handleNewWorkout={handleNewWorkout} /> )
                 : (
-                    <div className='distance-time'>
+                    <div id='distance-time'>
                         <Distance 
                             newWorkout={newWorkout}
                             handleNewWorkout={handleNewWorkout} />
@@ -37,7 +37,8 @@ const NewSet = ({
                             newWorkout={newWorkout}
                             handleNewWorkout={handleNewWorkout} />
                     </div> )}
-            <button >
+
+            <button id='save-button'>
                 Save
             </button>
         </div>

@@ -145,7 +145,8 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout, validSubmission 
     return (
         <div>
             <br />
-            <button name='new-cancel' onClick={handleClicks}>
+            
+            <button name='new-cancel' className='create-delete-button' onClick={handleClicks}>
                 {show.workout ? 'Cancel Workout' : 'New Workout'}
             </button>
 

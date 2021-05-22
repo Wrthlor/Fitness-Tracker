@@ -18,6 +18,8 @@ const Sets = ({ workouts, lift, deleteButton }) => {
                 return 'ft';
             case 'Miles':
                 return 'mi';
+            case 'Yards':
+                return 'yd';
             default:
                 break;
         }
@@ -32,11 +34,14 @@ const Sets = ({ workouts, lift, deleteButton }) => {
                             <li key={set.workout_id} >
                                 {set.category !== 'Cardio' 
                                     ? `${Number(set.weight)} lbs, ${set.reps} reps` 
-                                    : `Distance: ${set.distance} ${unitAbbreviation(set.unit)}, 
-                                        Time: ${set.hh !== 0 ? pad(set.hh, 2) + "h" : ""} 
+
+                                    : `${set.distance} ${unitAbbreviation(set.unit)}, 
+                                        ${set.hh !== 0 ? pad(set.hh, 2) + "h" : ""} 
                                             ${set.hh !== 0 ? pad(set.mm, 2) + "m" : (set.mm !== 0 ? pad(set.mm, 2) + "m" : "" )}
                                             ${pad(set.ss, 2)}s` }
+                                            
                                 {' '}
+                                
                                 <button>Delete</button>
                             </li>
                         </form>

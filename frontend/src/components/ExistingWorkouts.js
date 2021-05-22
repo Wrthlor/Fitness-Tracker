@@ -7,7 +7,7 @@ const ExistingWorkouts = ({ loggedWorkouts, deleteButton }) => {
     const exercises = Array.from(new Set(loggedWorkouts.map(element => element.lift)));
 
     return (
-        <div className='sets'>
+        <div>
             {exercises.map(lift => {
                 if (lift !== "Exercises") {
                     return (

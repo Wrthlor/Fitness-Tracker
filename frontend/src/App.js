@@ -299,10 +299,11 @@ const App = () => {
     };
 
     return (
-        <div className='center'>
+        <div id='app'>
             <DatePicker 
                 className='date-picker'
                 calendarClassName='calendar-date-picker'
+                calendarType="US"
                 onChange={setDate}
                 value={date} 
                 clearIcon={null} 

@@ -5,13 +5,20 @@ h4 {
 
 li {
     color: black;
-    padding-top: 3px;
-    font-size: 15px;
+    padding-top: 0.1875rem;
+    font-size: 0.9375rem;
 }
 
-button {
-    max-width: 5rem;
-    max-height: 5rem;
+#app {    
+    background-color: rgb(238, 238, 238);
+    margin: 0 auto;
+    min-width: 15.625rem;
+    max-width: 31.25rem;
+    /* width: 250px; */
+    border-color: rgb(25, 117, 255);
+    border-style: solid;
+    border-width: 0.1875rem;
+    padding: 0.9375rem;
 }
 
 .warning {
@@ -22,92 +29,82 @@ button {
     padding: 0.1875rem;
 }
 
-.center {    
-    background-color: rgb(238, 238, 238);
-    margin: 0 auto;
-    max-width: 500px;
-    border-color: rgb(25, 117, 255);
-    border-style: solid;
-    border-width: 0.1875rem;
-    padding: 0.9375rem;
-}
-
 .date-picker {
     position: relative;
     margin: 0 auto;
 }
 
-.create-button {
-    position: relative;
-    left: 50px;
+.calendar-date-picker {
+    min-width: 18.75rem;
+    width: 18.75rem;
+    height: 19.25rem;
 }
 
-.logs {
+.create-delete-button {
+    width: 4rem;
+}
+
+#new-set {
     display: flex;
     flex-direction: column;
-    align-content: center;
 }
 
-.delete-log {
-    max-width: 6.25rem;
-}
-
-.new-set {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    position: relative;
-}
-
-.weight-reps {
+#wgt-reps {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     height: 1.5rem;
 }
 
-.distance-time {
-    position: relative;
+#wgt {
+    order: 1;
+    max-width: 5rem;
 }
 
-.distance {
+#reps {
+    order: 2;
+    max-width: 3rem;
+}
+
+#distance-time {
+    display: flex;
+    flex-direction: column;
+}
+
+#distance {
+    order: 1;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    flex-shrink: 0;
     height: 1.5rem;
 }
 
-.distance-input {
-    max-width: 9.375rem;
+#distance-input {
+    width: 7rem;
     float: left;
     position: relative;
 }
 
-.distance-units {
-    position: relative;
+#distance-units {
+    width: 5.26875rem;
 }
 
-.time {
+#time {
+    order: 2;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    position: relative;
+    flex-shrink: 0;
     height: 1.5rem;
 }
 
-.hours {
-    order: 1;
-    max-width: 2rem;
+.time-measurement {
+    width: 2rem;
 }
 
-.minutes {
-    order: 2;
-    max-width: 2rem;
-}
-
-.seconds {
+#save-button {
     order: 3;
-    max-width: 2rem;
+    width: 3rem;
 }
 
 input::-webkit-outer-spin-button,

@@ -11,6 +11,7 @@ import React from 'react';
 */
 const Dropdown = ({ 
     name = "", 
+    id = "",
     className = "",
     hidden = false, 
     disabled = false, 
@@ -20,8 +21,8 @@ const Dropdown = ({
 }) => {
 
     return (
-        <div className={className}>
-            <select name={name} defaultValue={placeholder} onChange={onChange }>
+        <div>
+            <select name={name} id={id} className={className} defaultValue={placeholder} onChange={onChange }>
                 <option hidden={hidden} disabled={disabled} value={placeholder} >
                     {placeholder}
                 </option>
