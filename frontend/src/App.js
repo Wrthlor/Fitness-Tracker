@@ -131,7 +131,7 @@ const App = () => {
                         hh: '',
                         mm: '',
                         ss: '',
-                        logs_id: newWorkout.logs_id
+                        log_id: newWorkout.log_id
                     })
                 })
                 .catch(error => console.log(error));
@@ -235,7 +235,7 @@ const App = () => {
                 hh: '',
                 mm: '',
                 ss: '',                
-                logs_id: getLogId(logs, formattedDate)
+                log_id: getLogId(logs, formattedDate)
             })
         }
         else {
@@ -243,7 +243,7 @@ const App = () => {
                 if (event.target.value >= 0) {
                     setNewWorkout({
                         ...newWorkout,
-                        logs_id: getLogId(logs, formattedDate),
+                        log_id: getLogId(logs, formattedDate),
                         [event.target.name]: event.target.value,
                     });
                 }
@@ -253,7 +253,7 @@ const App = () => {
                     if (event.target.value >= 0  && event.target.value <= 59) {
                         setNewWorkout({
                             ...newWorkout,
-                            logs_id: getLogId(logs, formattedDate),
+                            log_id: getLogId(logs, formattedDate),
                             [event.target.name]: event.target.value,
                         });
                     } 
@@ -262,7 +262,7 @@ const App = () => {
                     if (event.target.value >= 0 && event.target.value <= 99) {
                         setNewWorkout({
                             ...newWorkout,
-                            logs_id: getLogId(logs, formattedDate),
+                            log_id: getLogId(logs, formattedDate),
                             [event.target.name]: event.target.value,
                         });
                     }
@@ -271,7 +271,7 @@ const App = () => {
                     if (event.target.value >= 0) {
                         setNewWorkout({
                             ...newWorkout,
-                            logs_id: getLogId(logs, formattedDate),
+                            log_id: getLogId(logs, formattedDate),
                             [event.target.name]: event.target.value,
                         });
                     }
@@ -280,7 +280,7 @@ const App = () => {
             else {
                 setNewWorkout({
                     ...newWorkout,
-                    logs_id: getLogId(logs, formattedDate),
+                    log_id: getLogId(logs, formattedDate),
                     [event.target.name]: event.target.value,
                 });
             }
@@ -292,7 +292,7 @@ const App = () => {
         if (checkExistingLog(log, formattedDate)) {
             let log_id = getLogId(log, formattedDate);
             if (log_id !== undefined) {
-                return workouts.filter(workout => workout.logs_id === log_id);
+                return workouts.filter(workout => workout.log_id === log_id);
             }
         }
         return [];
