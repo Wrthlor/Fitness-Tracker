@@ -200,7 +200,7 @@ const App = () => {
                     return arr.filter(workout => workout.workout_id !== id);
                 }
                 logData
-                    .deleteWorkout(getLogId(logs, formattedDate), id)
+                    .deleteWorkout(id)
                     .then(() => {
                         setWorkouts(
                             deleteById(workouts, id)

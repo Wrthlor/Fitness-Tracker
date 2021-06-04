@@ -1,11 +1,20 @@
-// const mysql = require('mysql');
+const jwt = require('jsonwebtoken');
 const mysql = require('mysql2');
 const trackerRouter = require('express').Router();
 const mySQL_URI = require('../utils/config').mySQL_URI;
 
 let connection = mysql.createConnection(mySQL_URI);
 
+const getTokenFrom = req => {
+    const authorization = req.get('authorization');
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7);
+    }
+    return null;
+}
+
 // HTTP GET request to list all existing exercises
+// getExercises()
 trackerRouter.get('/exercises', async (req, res, next) => {
     let sql = 'SELECT id, exercise_name AS name, categories_id FROM exercises';
     connection.query(sql, (error, result) => {
@@ -19,6 +28,7 @@ trackerRouter.get('/exercises', async (req, res, next) => {
 })
 
 // HTTP GET request to list all existing categories (for exercises)
+// getCategories()
 trackerRouter.get('/categories', async (req, res) => {
     let sql = 'SELECT id, category_name AS name FROM categories ORDER BY id';
     connection.query(sql, (error, result) => {
@@ -31,13 +41,24 @@ trackerRouter.get('/categories', async (req, res) => {
     })
 })
 
+
 // HTTP GET request to list all existing logs
+// getLogs()
 trackerRouter.get('/logs', async (req, res) => {
+
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if(!token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' });
+    }
+    const user_id = await decodedToken.id;
+    
     let sql = `SELECT 
                 id, 
                 DATE_FORMAT(created_at, "%c/%e/%Y") AS date 
-            FROM logs`;
-    connection.query(sql, (error, result) => {
+            FROM logs
+            WHERE user_id = ? `;
+    connection.query(sql, [user_id], (error, result) => {
         if (error) throw error;
         let logData = [];
         result.forEach(log => {
@@ -50,43 +71,17 @@ trackerRouter.get('/logs', async (req, res) => {
     });
 })
 
-// HTTP GET request to list all existing workouts
-trackerRouter.get('/workouts', async (req, res) => {
-    let sql = `SELECT                  
-                workouts.id AS 'workout_id',                  
-                exercises.exercise_name AS 'lift',
-                categories.category_name AS 'category',
-                metrics.wgt AS 'weight',
-                metrics.metric AS 'metric',
-                metrics.reps AS 'reps',
-                metrics.distance AS 'distance',
-                metrics.unit AS 'unit',
-                metrics.hour AS 'hh',
-                metrics.minute AS 'mm',
-                metrics.second AS 'ss',
-                workouts.log_id AS 'log_id' 
-            FROM workouts              
-            JOIN exercises                  
-                ON workouts.exercise_id = exercises.id              
-            JOIN metrics                  
-                ON workouts.id = metrics.workout_id
-            JOIN categories
-                ON exercises.categories_id = categories.id
-            ORDER BY workout_id, log_id;`
-    connection.query(sql, (error, result) => {
-        if (error) throw error;
-        let workoutData = [];
-        result.forEach(workout => {
-            workoutData.push(workout)
-        })
-        res.send(workoutData);
-    });
-})
-
 // HTTP POST request to create a new log
-trackerRouter.post('/logs', async (req, res) => {
-    const user_id = req.body.user_id;
+// createLog(newLog)
+trackerRouter.post('/logs', async (req, res) => { 
     const newDate = req.body.date;
+
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if(!token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' });
+    }
+    const user_id = await decodedToken.id;
 
     let sql = 'INSERT INTO logs (user_id, created_at) VALUES (?, ?)';
     connection.query(sql, [user_id, newDate], (error, result) => {
@@ -95,11 +90,38 @@ trackerRouter.post('/logs', async (req, res) => {
     });
 })
 
-// HTTP GET request to list all workouts and corresponding weight and reps for specified log (i.e. specified day)
-trackerRouter.get('/logs/:log_id', async (req, res) => {
+// HTTP DELETE request to delete log (and corresponding workouts, metrics)
+// deleteLog(log_id)
+trackerRouter.delete('/logs/:log_id', async (req, res) => {
     const log_id = req.params.log_id;
 
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if(!token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' });
+    }
+
+    sql = `DELETE FROM logs WHERE id = ?`;
+    connection.query(sql, [log_id], (error) => {
+        if (error) throw error;
+        res.status(200).json({ "Message" : "Log deleted" });
+    })
+})
+
+
+// HTTP GET request to list all existing workouts
+// getWorkouts()
+trackerRouter.get('/workouts', async (req, res) => {
+    
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if(!token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' });
+    }
+    const user_id = await decodedToken.id;
+    
     let sql = `SELECT 
+                workouts.log_id AS 'log_id', 
                 workouts.id AS 'workout_id', 
                 exercises.exercise_name AS 'lift', 
                 categories.category_name AS 'category',
@@ -110,8 +132,7 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
                 metrics.unit AS 'unit',
                 metrics.hour AS 'hh',
                 metrics.minute AS 'mm',
-                metrics.second AS 'ss',
-                workouts.log_id AS 'log_id' 
+                metrics.second AS 'ss'
             FROM workouts 
             JOIN exercises 
                 ON workouts.exercise_id = exercises.id 
@@ -119,9 +140,11 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
                 ON workouts.id = metrics.workout_id 
             JOIN categories
                 ON exercises.categories_id = categories.id
-            WHERE workouts.log_id = ? 
-            ORDER BY metrics.created_at, exercise_name`;
-    connection.query(sql, [log_id], (error, result) => {
+            JOIN logs
+                ON workouts.log_id = logs.id
+            WHERE logs.user_id = ?
+            ORDER BY workout_id, log_id`
+    connection.query(sql, [user_id], (error, result) => {
         if (error) throw error;
         if (result[0] == undefined ) {
             res
@@ -139,42 +162,16 @@ trackerRouter.get('/logs/:log_id', async (req, res) => {
     });
 })
 
-// HTTP GET request to list specific workout with corresponding weight and reps (specified set)
-trackerRouter.get('/logs/:log_id/:workout_id', async (req, res) => {
-    const log_id = req.params.log_id;
-    const workout_id = req.params.workout_id;
-    
-    let sql = `SELECT 
-                exercises.exercise_name AS 'lift', 
-                metrics.wgt AS 'weight', 
-                metrics.metric AS 'metric',
-                metrics.reps AS 'reps',
-                metrics.distance AS 'distance',
-                metrics.unit AS 'unit',
-                metrics.hour AS 'hh',
-                metrics.minute AS 'mm',
-                metrics.second AS 'ss',
-                metrics.id AS 'metrics_id'
-            FROM workouts 
-            JOIN exercises 
-                ON workouts.exercise_id = exercises.id 
-            JOIN metrics 
-                ON workouts.id = metrics.workout_id 
-            WHERE workouts.log_id = ? AND workouts.id = ?`;
-    connection.query(sql, [log_id, workout_id], (error, result) => {
-        if (error) throw error;
-        if (result[0] === undefined ) {
-            res.send("This workout does not exist").status(404).end();
-        }
-        else {
-            res.send(result[0])
-        }
-    });
-})
-
 // HTTP POST request to create specified workout (specified set) for corresponding log (specified day)
-trackerRouter.post('/logs/:log_id', async (req, res) => {
+// saveWorkout(log_id, newWorkout)
+trackerRouter.post('/workouts/log/:log_id', async (req, res) => {
     const log_id = req.params.log_id;
+
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if(!token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' });
+    }
 
     let workout = {
         'workout_id' : "",
@@ -189,14 +186,9 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
         'second' : req.body.ss
     };
 
-    let sql = `INSERT INTO metrics (wgt, reps, distance, unit, hour, minute, second) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(sql, [workout.weight, workout.reps, workout.distance, workout.unit, workout.hour, workout.minute, workout.second], (error, result) => {
-        if (error) throw error;
-        let metrics_id = result.insertId;
-        sql = `INSERT INTO workouts (
+    let sql = `INSERT INTO workouts (
                 exercise_id, 
-                metrics_id, 
-                logs_id
+                log_id
             )
             VALUES (
                 (
@@ -204,10 +196,23 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
                     FROM exercises
                     WHERE exercise_name = ?
                 ),
-                ?,
                 ?
             )`;
-        connection.query(sql, [workout.exercise, metrics_id, log_id], (error, result) => {
+    connection.query(sql, [workout.exercise, log_id], (error, result) => {
+        if (error) throw error;
+        let workout_id = result.insertId;
+        sql = `INSERT INTO metrics (
+                wgt, 
+                reps, 
+                distance, 
+                unit, 
+                hour, 
+                minute, 
+                second,
+                workout_id 
+            ) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        connection.query(sql, [workout.weight, workout.reps, workout.distance, workout.unit, workout.hour, workout.minute, workout.second, workout_id], (error, result) => {
             if(error) throw error;
             workout.workout_id = result.insertId;
             res.status(201).json(workout);
@@ -215,21 +220,17 @@ trackerRouter.post('/logs/:log_id', async (req, res) => {
     })
 })
 
-// HTTP DELETE request to delete log (and corresponding workouts, metrics)
-trackerRouter.delete('/logs/:log_id', async (req, res) => {
-    const log_id = req.params.log_id;
-
-    sql = `DELETE FROM logs WHERE id = ?`;
-    connection.query(sql, [log_id], (error) => {
-        if (error) throw error;
-        res.status(200).json({ "Message" : "Log deleted" });
-    })
-})
-
 // HTTP DELETE request to delete specified workout with corresponding weight and reps (specified set)
-trackerRouter.delete('/logs/:log_id/:workout_id', async (req, res) => {
+// deleteWorkout(log_id, workout_id)
+trackerRouter.delete('/workouts/:workout_id', async (req, res) => {
     const workout_id = req.params.workout_id;
     
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if(!token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' });
+    }
+
     let sql = `DELETE FROM workouts WHERE id = ?`;
     connection.query(sql, [workout_id], (error) => {
         if (error) throw error;

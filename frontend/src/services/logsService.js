@@ -27,12 +27,12 @@ const getWorkouts = () => {
 }
 
 const saveWorkout = (log_id, newWorkout) => {
-    const req = axios.post(`${baseUrl}/logs/${log_id}`, newWorkout);
+    const req = axios.post(`${baseUrl}/workouts/log/${log_id}`, newWorkout);
     return req.then(res => res.data);
 }
 
-const deleteWorkout = (log_id, workout_id) => {
-    const req = axios.delete(`${baseUrl}/logs/${log_id}/${workout_id}`);
+const deleteWorkout = (workout_id) => {
+    const req = axios.delete(`${baseUrl}/workouts/${workout_id}`);
     return req.then(res => res.data);
 }
 

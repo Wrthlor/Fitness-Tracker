@@ -7,3 +7,4 @@ node_modules
 placeholder.sql
 
 controllers/unusedRequests.js
+testUsers.txt
