@@ -20,6 +20,7 @@ usersRouter.get('/users', async (req, res, next) => {
 })
 
 // Creates new user 
+// createUser(newUser)
 usersRouter.post('/users', async (req, res, next) => {
     const body = req.body;
 
@@ -49,6 +50,7 @@ usersRouter.post('/users', async (req, res, next) => {
 })
 
 // Logins to user
+// login(credentials)
 usersRouter.post('/login', async (req, res, next) => {
     const body = req.body;
 
@@ -90,7 +92,7 @@ usersRouter.post('/login', async (req, res, next) => {
         const token = jwt.sign(
             userForToken, 
             process.env.SECRET,
-            { expiresIn: 60*60 });
+            { expiresIn: '20s' });
 
         res
             .status(200)

@@ -3,10 +3,18 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-date-picker';
 import Logs from './components/Logs';
 import LogButton from './components/LogButton'
+import LoginForm from './components/LoginForm';
+import Notification from './components/Notification';
 
-import logData from './services/logsService';
+import logsService from './services/logsService';
+import usersServices from './services/usersServices';
 
 const App = () => {
+
+    const [user, setUser ] = useState(null);
+    const [username, setUsername ] = useState('');
+    const [password, setPassword ] = useState('');
+
     const [workouts, setWorkouts ] = useState([]);
     const [newWorkout, setNewWorkout ] = useState({ 
         lift: 'Exercises', 
@@ -26,6 +34,8 @@ const App = () => {
 
     const [deleteStatus, setDeleteStatus ] = useState(false);
     
+    const [message, setMessage ] = useState('');
+    
     // Formats date
     let formattedDate = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
     let mySQL_date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
@@ -33,30 +43,31 @@ const App = () => {
     // Check if there's an existing log for date
     const checkExistingLog = (logs, date) => logs.map(log => log.date === date).includes(true);
 
+    // Checks for logged-in user
+    useEffect(() => {
+        const loggedUserJson = window.localStorage.getItem('loggedUser');
+        if (loggedUserJson) {
+            const user = JSON.parse(loggedUserJson);
+            setUser(user);
+            logsService.setToken(user.token);
+        }
+    }, []);
+
     // Logs data
     useEffect(() => {
-        logData
+        logsService
             .getLogs()
             .then(logs => setLogs(logs))
             .catch(error => console.log(error));
     }, [])
 
-    // Workouts data
+    // // Workouts data
     useEffect(() => {
-        logData
+        logsService
             .getWorkouts()
             .then(workouts => setWorkouts(workouts))
             .catch(error => console.log(error));
     }, [])
-
-    // Placeholder function for RNG workout_id's
-    // const newId = () => {
-    //     const rng = Math.floor(Math.random() * 1000000);
-    //     if (workouts.map((workout) => workout.workout_id).includes(rng)) 
-    //         return newId();
-    //     else 
-    //         return rng;
-    // };
 
     const validNewWorkout = () => {
         if (newWorkout.lift !== 'Exercises') {
@@ -112,7 +123,7 @@ const App = () => {
         }
         
         if (validNewWorkout() === true) {
-            logData
+            logsService
                 .saveWorkout(getLogId(logs, formattedDate), workoutObject)
                 .then(savedWorkout => {
                     workoutObject = {
@@ -147,7 +158,7 @@ const App = () => {
     };
 
     // Manages button click events
-    const handleClick = (event) => {
+    const handleClick = async (event) => {
         event.preventDefault();
 
         // console.log(event.target.name);
@@ -158,7 +169,7 @@ const App = () => {
                         date: mySQL_date
                     }
                     
-                    logData
+                    logsService
                         .createLog(logObject)
                         .then(newLog => {
                             logObject = {
@@ -183,7 +194,7 @@ const App = () => {
             case 'confirmDelete':
                 if (event.target.value === 'yes') {
                     const log_id = getLogId(logs, formattedDate);
-                    logData
+                    logsService
                         .deleteLog(log_id)
                         .then(() => {
                             setLogs(logs.filter(log => log.id !== log_id));
@@ -199,7 +210,7 @@ const App = () => {
                 const deleteById = (arr, id) => {
                     return arr.filter(workout => workout.workout_id !== id);
                 }
-                logData
+                logsService
                     .deleteWorkout(id)
                     .then(() => {
                         setWorkouts(
@@ -209,9 +220,48 @@ const App = () => {
                     .catch(error => console.log(error));
                 break;
 
+            // Logging into user
+            case 'login':
+                try {
+                    const user = await usersServices.login({
+                        username, password
+                    });
+        
+                    window.localStorage.setItem(
+                        'loggedUser', JSON.stringify(user)
+                    )
+                    logsService.setToken(user.token);
+                    setUser(user);
+                    setUsername('');
+                    setPassword('');
+                    
+                    setMessage('Successfully logged in');
+                    setTimeout(() => {
+                        setMessage('')
+                    }, 5000);
+                }
+                catch (exception) {
+                    setMessage('Invalid Username or Password');
+                    setTimeout(() => {
+                        setMessage('')
+                    }, 5000);
+                }
+                break;
+            
             default:
                 // Do nothing
                 break;
+        }
+    }
+
+    const handleChange = (event) => {
+        event.preventDefault();
+
+        if (event.target.type === 'password') {
+            setPassword(event.target.value);
+        } 
+        else {
+            setUsername(event.target.value);
         }
     }
 
@@ -300,6 +350,28 @@ const App = () => {
 
     return (
         <div id='app'>
+
+            {user === null &&
+                <LoginForm 
+                    handleLogin={handleClick} 
+                    username={username} 
+                    password={password} 
+                    handleChange={handleChange} 
+                />
+            }
+
+            {user !== null &&
+                <div>Logged in as <h3>{user.username}</h3></div>
+            }
+
+            {message !== '' && 
+                <Notification
+                    message={message}
+                    className="warning" />
+            }
+
+            <br />
+
             <DatePicker 
                 className='date-picker'
                 calendarClassName='calendar-date-picker'

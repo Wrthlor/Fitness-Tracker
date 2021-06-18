@@ -148,7 +148,7 @@ trackerRouter.get('/workouts', async (req, res) => {
         if (error) throw error;
         if (result[0] == undefined ) {
             res
-                .send("This log is empty or does not exist")
+                .send([])
                 .status(404)
                 .end();
         }
@@ -168,6 +168,7 @@ trackerRouter.post('/workouts/log/:log_id', async (req, res) => {
     const log_id = req.params.log_id;
 
     const token = getTokenFrom(req);
+
     const decodedToken = jwt.verify(token, process.env.SECRET);
     if(!token || !decodedToken.id) {
         return res.status(401).json({ error: 'token missing or invalid' });
