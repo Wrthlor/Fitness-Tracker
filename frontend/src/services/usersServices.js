@@ -6,9 +6,9 @@ if (process.env.NODE_ENV === 'production')
 
     
 // Gets list of users
-const getUsers = () => {
-    const req = axios.get(`${baseUrl}/users`);
-    return req.then(res => res.data);
+const getUsers = async () => {
+    const res = await axios.get(`${baseUrl}/users`);
+    return res.data;
 }
 
 // Create user

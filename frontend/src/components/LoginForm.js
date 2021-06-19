@@ -1,26 +1,11 @@
-import React/*, { userState, useState }*/ from 'react';
+import React from 'react';
 
-// import usersServices from '../services/usersServices';
-// import logsService from '../services/logsService';
-// import Notification from './Notification';
-
-const LoginForm = ({ handleLogin, username, password, handleChange }) => {
-
-    // const [user, setUser] = useState(null);
-    // const [username, setUsername] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [message, setMessage] = useState('');
-
-    // const handleChange = (event) => {
-    //     event.preventDefault();
-
-    //     if (event.target.type === 'password') {
-    //         setPassword(event.target.value);
-    //     } 
-    //     else {
-    //         setUsername(event.target.value);
-    //     }
-    // }
+const LoginForm = ({ 
+    handleLogin, 
+    username, 
+    password, 
+    handleChange 
+}) => {
 
     return (
         <div>
@@ -46,12 +31,6 @@ const LoginForm = ({ handleLogin, username, password, handleChange }) => {
                 <div>
                     <button type="submit">Login</button>
                 </div>
-
-                {/* {message !== '' && 
-                    <Notification
-                        message={message}
-                        className='warning' />
-                } */}
             </form>
         </div>
     )

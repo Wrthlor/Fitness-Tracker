@@ -21,12 +21,42 @@ li {
     padding: 0.9375rem;
 }
 
-.warning {
-    color: rgb(236, 92, 34);
+#fitness-tracker {
+    padding: 5px;
+}
+
+#logged-in {
+    padding: 5px;
+}
+
+.success {
+    color: green;
     font-size: 1.25rem;
+    font-weight: bold;
     border-style: solid;
     border-width: 0.1875rem;
     padding: 0.1875rem;
+    text-align: center;
+}
+
+.failure {
+    color: red;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 0.1875rem;
+    padding: 0.1875rem;
+    text-align: center;
+}
+
+.warning {
+    color: rgb(236, 92, 34);
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 0.1875rem;
+    padding: 0.1875rem;
+    text-align: center;
 }
 
 .date-picker {

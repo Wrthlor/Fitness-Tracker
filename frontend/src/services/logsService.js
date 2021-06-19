@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// let baseUrl = 'https://fitness-tracker-124-backend.herokuapp.com';
 let baseUrl = 'http://localhost:3001';
 if (process.env.NODE_ENV === 'production') 
     baseUrl = process.env.REACT_APP_HOST;
@@ -13,13 +12,13 @@ const setToken = newToken => {
 }
 
 // Logs functions 
-const getLogs = () => {
+const getLogs = async () => {
     const config = {
         headers: { Authorization: token }
     }
 
-    const req = axios.get(`${baseUrl}/logs`, config);
-    return req.then(res => res.data);
+    const res = await axios.get(`${baseUrl}/logs`, config);
+    return res.data;
 }
 
 const createLog = async newLog => {
@@ -28,7 +27,6 @@ const createLog = async newLog => {
     }
 
     const res = await axios.post(`${baseUrl}/logs`, newLog, config);
-    // console.log(res.data);
     return res.data;
 }
 
@@ -70,14 +68,14 @@ const deleteWorkout = async (workout_id) => {
 }
 
 // Exercise functions
-const getExercises = () => {
-    const req = axios.get(`${baseUrl}/exercises`);
-    return req.then(res => res.data);
+const getExercises = async () => {
+    const res = await axios.get(`${baseUrl}/exercises`);
+    return res.data;
 }
 
-const getCategories = () => {
-    const req = axios.get(`${baseUrl}/categories`);
-    return req.then(res => res.data);
+const getCategories = async () => {
+    const res = await axios.get(`${baseUrl}/categories`);
+    return res.data;
 }
 
 const logsService = {
