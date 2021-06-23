@@ -49,6 +49,22 @@ li {
     text-align: center;
 }
 
+#username-highlight {
+    color:rgb(13, 58, 155)
+}
+
+#password-highlight {
+    color:rgb(13, 58, 155)
+}
+
+#error-username-highlight {
+    color: red;
+}
+
+#error-password-highlight {
+    color: red;
+}
+
 .warning {
     color: rgb(236, 92, 34);
     font-size: 1.25rem;
