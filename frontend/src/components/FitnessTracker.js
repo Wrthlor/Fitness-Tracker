@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import DatePicker from 'react-date-picker';
 import Logs from './Logs';
@@ -6,7 +6,7 @@ import LogButton from './LogButton';
 
 import logsService from '../services/logsService';
 
-const FitnessTracker = () => {
+const FitnessTracker = ({ setUser, setMessage }) => {
 
     const [workouts, setWorkouts ] = useState([]);
     const [newWorkout, setNewWorkout ] = useState({ 
@@ -26,6 +26,9 @@ const FitnessTracker = () => {
     const [logs, setLogs ] = useState([]);
 
     const [deleteStatus, setDeleteStatus ] = useState(false);
+
+    const idRef = useRef();
+
 
     // Formats date
     let formattedDate = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
@@ -95,7 +98,24 @@ const FitnessTracker = () => {
                             }
                             setLogs(logs.concat(logObject));
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => {
+                            console.log(error);
+                            
+                            window.localStorage.removeItem('loggedUser');
+                            setUser(null);
+
+                            setMessage({
+                                message: 'Your session has expired. Please log in',
+                                type: "expired"
+                            });
+                            const id = setTimeout(() => {
+                                setMessage({
+                                    message: '',
+                                    type: ''
+                                });
+                            }, 5000);
+                            idRef.current = id;
+                        });
                 }
                 break;
 
@@ -113,7 +133,24 @@ const FitnessTracker = () => {
                         .then(() => {
                             setLogs(logs.filter(log => log.id !== log_id));
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => {
+                            console.log(error);
+                            
+                            window.localStorage.removeItem('loggedUser');
+                            setUser(null);
+
+                            setMessage({
+                                message: 'Your session has expired. Please log in',
+                                type: "expired"
+                            });
+                            const id = setTimeout(() => {
+                                setMessage({
+                                    message: '',
+                                    type: ''
+                                });
+                            }, 5000);
+                            idRef.current = id;
+                        });
                 }
                 setDeleteStatus(false);
                 break;
@@ -131,7 +168,24 @@ const FitnessTracker = () => {
                             deleteById(workouts, id)
                         );
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        console.log(error);
+                            
+                        window.localStorage.removeItem('loggedUser');
+                        setUser(null);
+
+                        setMessage({
+                            message: 'Your session has expired. Please log in',
+                            type: "expired"
+                        });
+                        const id = setTimeout(() => {
+                            setMessage({
+                                message: '',
+                                type: ''
+                            });
+                        }, 5000);
+                        idRef.current = id;
+                    });
                 break;
             
             default:
@@ -199,7 +253,24 @@ const FitnessTracker = () => {
                         log_id: newWorkout.log_id
                     })
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    console.log(error);
+                            
+                    window.localStorage.removeItem('loggedUser');
+                    setUser(null);
+
+                    setMessage({
+                        message: 'Your session has expired. Please log in',
+                        type: "expired"
+                    });
+                    const id = setTimeout(() => {
+                        setMessage({
+                            message: '',
+                            type: ''
+                        });
+                    }, 5000);
+                    idRef.current = id;
+                });
         }
     };
 
@@ -285,6 +356,14 @@ const FitnessTracker = () => {
         }
         return [];
     };
+
+    // Clear timeoutId
+    useEffect(() => {
+        const timeoutId = idRef.current;
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    });
 
     return (
         <div id='fitness-tracker'>

@@ -49,6 +49,16 @@ li {
     text-align: center;
 }
 
+.expired {
+    color: rgb(39, 39, 39);
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 0.1875rem;
+    padding: 0.1875rem;
+    text-align: center;
+}
+
 #username-highlight {
     color:rgb(13, 58, 155)
 }

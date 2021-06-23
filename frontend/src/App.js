@@ -85,7 +85,7 @@ const App = () => {
         }
         // Logout
         else {
-            window.localStorage.clear();
+            window.localStorage.removeItem('loggedUser');
             setUser(null);
             setUsername('');
             setPassword('');
@@ -152,7 +152,9 @@ const App = () => {
                             </button>
                         </div>
                         
-                        <FitnessTracker />
+                        <FitnessTracker
+                            setUser={setUser}
+                            setMessage={setMessage} />
                     </div> )}
         </div>
     );
