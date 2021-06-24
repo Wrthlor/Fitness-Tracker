@@ -9,24 +9,121 @@ li {
     font-size: 0.9375rem;
 }
 
+button {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    font-size: 0.78rem;
+    border-color: rgb(90, 90, 90);
+    border-radius: 0.625rem;
+}
+
 #app {    
     background-color: rgb(238, 238, 238);
     margin: 0 auto;
     min-width: 15.625rem;
     max-width: 31.25rem;
-    /* width: 250px; */
     border-color: rgb(25, 117, 255);
     border-style: solid;
     border-width: 0.1875rem;
     padding: 0.9375rem;
 }
 
+#login-form {
+    margin-left: 2rem;
+}
+
+#login-title {
+    margin-left: 7rem;
+}
+
+#login-user {
+    margin-left: 0.625rem;
+    margin-bottom: 0.1875rem;
+}
+
+#login-pass {
+    margin-left: 0.84375rem;
+    margin-bottom: 0.3125rem;
+}
+
+#login-button {
+    color: rgb(90, 90, 90);
+    background-color: rgb(255, 255, 255);
+    font-size: 0.78rem;
+    font-weight: bold;
+    border-color: rgb(90, 90, 90);
+    border-radius: 0.625rem;
+    width: 12.5rem;
+    height: 1.5625rem; 
+    margin-left: 3rem;
+}
+
+#sign-up-button {
+    color: white;
+    background-color: rgb(120, 120, 120);
+    font-size: 0.78rem;
+    font-weight: bold;
+    border-color: white;
+    border-radius: 0.625rem;
+    width: 12.5rem;
+    height: 1.5625rem; 
+    margin-top: 0.3125rem;
+    margin-left: 3rem;
+}
+
+#sign-up-header {
+    margin-left: 2.5rem;
+}
+
+#cancel-button {
+    width: 10rem;
+    height: 1.5625rem; 
+    margin-bottom: 0.625rem;
+}
+
+#create-button {
+    width: 10rem;
+    height: 1.5625rem; 
+}
+
+#new-name {
+    margin-left: 5.125rem;
+    margin-bottom: 0.078rem;
+}
+
+#new-user {
+    margin-left: 3.4375rem;
+}
+
+#new-pass {
+    margin-left: 3.625rem;
+    margin-bottom: 0.078rem;
+}
+
 #fitness-tracker {
-    padding: 5px;
+    padding: 0.3125rem;
 }
 
 #logged-in {
-    padding: 5px;
+    padding: 0.3125rem;
+    display: flex;
+    margin-left: 1.5rem;
+}
+
+#logged-in-message {
+    flex-grow: 1.75;
+    font-size: 1.25rem;
+    order: 1;
+    align-self: flex-start;
+}
+
+#logout-button {
+    flex-grow: 1;
+    order: 2;
+    width: 4rem;
+    min-width: 0.25rem;
+    align-self: flex-end;
+    margin-right: 1.875rem;
 }
 
 .success {
@@ -85,9 +182,13 @@ li {
     text-align: center;
 }
 
+#logged-in-username {
+    color: rgb(102, 44, 196);
+}
+
 .date-picker {
     position: relative;
-    margin: 0 auto;
+    margin-left: 4rem;
 }
 
 .calendar-date-picker {
@@ -96,10 +197,21 @@ li {
     height: 19.25rem;
 }
 
-.create-delete-button {
+#create-delete-log {
     width: 5rem;
     text-align: center;
-    margin: auto;
+    margin-left: 5.25rem;
+    margin-top: 0.625rem;
+}
+
+#new-workout {
+    margin-top: 1rem;
+    margin-left: 5.25rem;
+}
+
+#new-cancel-workout {
+    width: 5rem;
+    text-align: center;
 }
 
 #new-set {
@@ -163,6 +275,10 @@ li {
 #save-button {
     order: 3;
     width: 4rem;
+}
+
+#existing-workouts {
+    margin-left: 1.875rem;
 }
 
 input::-webkit-outer-spin-button,

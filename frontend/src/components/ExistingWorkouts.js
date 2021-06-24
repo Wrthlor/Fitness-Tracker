@@ -11,7 +11,7 @@ const ExistingWorkouts = ({ loggedWorkouts, deleteButton }) => {
             {exercises.map(lift => {
                 if (lift !== "Exercises") {
                     return (
-                        <div key={lift} >
+                        <div key={lift} id='existing-workouts'>
                             <h4>{lift}</h4>
                             <Sets 
                                 workouts={loggedWorkouts} 

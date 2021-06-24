@@ -133,7 +133,7 @@ const App = () => {
                                 handleChange={handleChange} 
                             />
 
-                            <button onClick={() => setSignup(true)}>
+                            <button id='sign-up-button' onClick={() => setSignup(true)}>
                                 Sign Up
                             </button>
                         </div> )
@@ -145,9 +145,9 @@ const App = () => {
                 : (
                     <div>
                         <div id='logged-in'>
-                            <div>Logged in as <b><i>{user.username}</i></b></div>
+                            <div id='logged-in-message'>Logged in as <b id='logged-in-username'><i>{user.username}</i></b></div>
 
-                            <button onClick={handleLogin} >
+                            <button id='logout-button' onClick={handleLogin} >
                                 Log out
                             </button>
                         </div>

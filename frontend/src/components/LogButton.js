@@ -6,7 +6,7 @@ const LogButton = ({ handleClick, logStatus, deleteStatus }) => {
 
     return (
         <div>
-            <button className='create-delete-button' 
+            <button id='create-delete-log' 
                     name={logStatus ? 'deleteLog' : 'createLog' } 
                     onClick={handleClick}
             >

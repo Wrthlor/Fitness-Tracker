@@ -173,9 +173,9 @@ const SignUp = ({
     return (
         <div>
             <div>
-                <h2>Sign up</h2>
+                <h2 id='sign-up-header'>Sign up</h2>
 
-                <button name='cancel' onClick={handleNewUser}>
+                <button id='cancel-button' name='cancel' onClick={handleNewUser}>
                     Cancel
                 </button>
             </div>
@@ -184,6 +184,7 @@ const SignUp = ({
                 <div>
                     Name { }
                     <input 
+                        id='new-name'
                         type='text'
                         value={newUser.name}
                         maxLength='100'
@@ -193,6 +194,7 @@ const SignUp = ({
                 <div>
                     Username { }
                     <input 
+                        id='new-user'
                         type='text'
                         name='username'
                         value={newUser.username}
@@ -206,6 +208,7 @@ const SignUp = ({
                 <div>
                     Password { }
                     <input 
+                        id='new-pass'
                         type='password'
                         name='password'
                         value={newUser.password}
@@ -216,6 +219,7 @@ const SignUp = ({
                 <div>
                     Confirm Password { }
                     <input 
+                        id='confirm-pass'
                         type='password'
                         name='confirmPassword'
                         value={newUser.confirmPassword}
@@ -226,7 +230,7 @@ const SignUp = ({
                     <p id={highlight.pass}>Passwords may only contain alphanumeric characters and must be greater than 8 characters</p>
                 </div>
                 
-                <button type='submit'>
+                <button id='create-button' type='submit'>
                     Create
                 </button>
             </form>
