@@ -12,11 +12,11 @@ const DeleteLog = ({ handleClick }) => {
                 message={message}
                 className='warning' /> 
             
-            <button name='confirmDelete' value='yes' onClick={handleClick}>
+            <button id='confirm-delete-yes' name='confirmDelete' value='yes' onClick={handleClick}>
                 Yes
             </button>
             
-            <button name='confirmDelete' value='no' onClick={handleClick}>
+            <button id='confirm-delete-no' name='confirmDelete' value='no' onClick={handleClick}>
                 No
             </button>
         </div>

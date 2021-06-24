@@ -204,6 +204,17 @@ button {
     margin-top: 0.625rem;
 }
 
+#confirm-delete-yes {
+    width: 3.125rem;
+    margin-top: 0.3125rem;
+    margin-left: 4.5rem;
+}
+
+#confirm-delete-no {
+    width: 3.125rem;
+    margin-left: 0.25rem;
+}
+
 #new-workout {
     margin-top: 1rem;
     margin-left: 5.25rem;
