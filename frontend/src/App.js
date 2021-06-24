@@ -68,7 +68,7 @@ const App = () => {
                         message: '',
                         type: ''
                     });
-                }, 5000);
+                }, 3000);
             }
             catch (exception) {
                 setMessage({
@@ -80,7 +80,7 @@ const App = () => {
                         message: '',
                         type: ''
                     });
-                }, 5000);
+                }, 3000);
             }
         }
         // Logout
@@ -99,7 +99,7 @@ const App = () => {
                     message: '',
                     type: ''
                 });
-            }, 5000);
+            }, 3000);
         }
     }
 
@@ -110,6 +110,13 @@ const App = () => {
             setPassword(event.target.value);
         else 
             setUsername(event.target.value);
+    }
+
+    // Manages when sign up button is clicked
+    const clickSignUp = (event) => {
+        setUsername('');
+        setPassword('');
+        setSignup(true);
     }
 
     return (
@@ -133,7 +140,7 @@ const App = () => {
                                 handleChange={handleChange} 
                             />
 
-                            <button id='sign-up-button' onClick={() => setSignup(true)}>
+                            <button id='sign-up-button' onClick={clickSignUp}>
                                 Sign Up
                             </button>
                         </div> )

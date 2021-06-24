@@ -45,7 +45,7 @@ const SignUp = ({
                         user: 'username-highlight',
                         pass: 'password-highlight'
                     })
-                }, 5000);
+                }, 3000);
                 idRef.current = id;
             }
             // Checks for existing usernames
@@ -59,7 +59,7 @@ const SignUp = ({
                         user: '',
                         pass: ''
                     });
-                }, 5000);
+                }, 3000);
                 idRef.current = id;
             }
             // Checks password meets alphanumeric req
@@ -73,7 +73,7 @@ const SignUp = ({
                         user: 'username-highlight',
                         pass: 'password-highlight'
                     })
-                }, 5000);
+                }, 3000);
                 idRef.current = id;
             }
             // Checks if confirmed/passwords match
@@ -87,7 +87,7 @@ const SignUp = ({
                         user: '',
                         pass: ''
                     });
-                }, 5000); 
+                }, 3000); 
                 idRef.current = id;
             }
             // Meets critera to create new user
@@ -111,7 +111,7 @@ const SignUp = ({
                         message: '',
                         type: ''
                     });
-                }, 5000);
+                }, 3000);
                 idRef.current = id;
                 setSignup(false);
             }

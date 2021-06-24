@@ -109,7 +109,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout, validSubmission 
                     }
                     const id = setTimeout(() => {
                         setMessage('');
-                    }, 5000);
+                    }, 3000);
                     idRef.current = id;
 
                     if (validSubmission()) {
@@ -126,7 +126,7 @@ const NewWorkout = ({ handleSave, newWorkout, handleNewWorkout, validSubmission 
                         setMessage('Please select an exercise');
                         const id = setTimeout(() => {
                             setMessage('');
-                        }, 5000);
+                        }, 3000);
                         idRef.current = id;     // timeout id saved in ref
                     }
                 }
