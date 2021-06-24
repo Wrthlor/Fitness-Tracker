@@ -3,7 +3,7 @@ node_modules
 /*.env
 
 # SQL materials
-/SQL
+/SQL/git_ignored
 placeholder.sql
 
 controllers/unusedRequests.js
