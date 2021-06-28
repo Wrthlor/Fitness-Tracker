@@ -1,6 +1,6 @@
 # Fitness-Tracker
 
-Fitness-Tracker is a single-page-application which allows users to record the exercises and metrics done in a log format which corresponds to the date of the user's choosing. 
+Fitness-Tracker is a single-page-application which allows users to record the workouts and exercises done in a log format which corresponds to the date of the user's choosing. 
 
 Link to live Heroku app: [Fitness-Tracker](https://fitness-tracker-124.herokuapp.com/)
 
